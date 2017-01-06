@@ -28,7 +28,8 @@
   },
   "files": [
     "src/*.js",
-    "!src/*-spec.js"
+    "!src/*-spec.js",
+    "on-failed.sh"
   ],
   "homepage": "https://github.com/bahmutov/cypress-failed-log#readme",
   "keywords": [
