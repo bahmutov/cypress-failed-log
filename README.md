@@ -37,6 +37,29 @@ with failed test details.
 You can send the file as an email, upload it somewhere, post to a chat
 channel, etc.
 
+## Example
+
+Here is the failed test JSON file contents. The test name, the failure
+and each test command before the test are recorded
+
+```json
+{
+  "testName": "Website loads the About tab",
+  "testError": "Timed out retrying: Expected to find content: 'Join Us' but never did.",
+  "testCommands": [
+    "visit",
+    "new url https://www.company.com/#/",
+    "contains a.nav-link, About",
+    "click",
+    "new url https://www.company.com/#/about",
+    "hash",
+    "assert expected **#/about** to equal **#/about**",
+    "contains Join Us",
+    "assert expected **body :not(script):contains(**'Join Us'**), [type='submit'][value~='Join Us']** to exist in the DOM"
+  ]
+}
+```
+
 ### Small print
 
 Author: Gleb Bahmutov &lt;gleb.bahmutov@gmail.com&gt; &copy; 2017
