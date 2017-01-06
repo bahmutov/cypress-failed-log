@@ -1,7 +1,7 @@
 {
   "name": "cypress-failed-log",
   "description": "Gets you the Cypress test command log as JSON on failure",
-  "version": "1.0.0",
+  "version": "0.0.0-development",
   "author": "Gleb Bahmutov <gleb.bahmutov@gmail.com>",
   "bugs": "https://github.com/bahmutov/cypress-failed-log/issues",
   "config": {
@@ -59,7 +59,8 @@
     "secure": "nsp check",
     "size": "t=\"$(npm pack .)\"; wc -c \"${t}\"; tar tvf \"${t}\"; rm \"${t}\";",
     "test": "npm run unit",
-    "unit": "mocha src/*-spec.js"
+    "unit": "mocha src/*-spec.js",
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "devDependencies": {
     "ban-sensitive-files": "1.8.4",
@@ -70,7 +71,8 @@
     "mocha": "3.2.0",
     "nsp": "2.6.2",
     "pre-git": "3.12.0",
-    "standard": "8.6.0"
+    "standard": "8.6.0",
+    "semantic-release": "^6.3.2"
   },
   "standard": {
     "globals": [
