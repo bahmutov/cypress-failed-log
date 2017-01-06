@@ -3,7 +3,6 @@
 const kebabCase = require('lodash.kebabcase')
 const deburr = require('lodash.deburr')
 const reject = require('lodash.reject')
-const relative = require('path').join.bind(null, __dirname)
 
 const cleanupFilename = s => kebabCase(deburr(s))
 
@@ -19,7 +18,9 @@ function writeFailedTestInfo ({testName, testError, testCommands}) {
   // const runCmd = `npm run failed-test -- ${filename}`
   // pass filename as environment variable
 
-  const runCmd = relative('..', 'on-failed.sh')
+  // for now assume we are running from the root of
+  // the project and the shell script is in node_modules
+  const runCmd = './node_modules/cypress-failed-log/on-failed.sh'
   const options = {
     failOnNonZeroExit: false,
     env: {
