@@ -3,6 +3,7 @@
 const kebabCase = require('lodash.kebabcase')
 const deburr = require('lodash.deburr')
 const reject = require('lodash.reject')
+const relative = require('path').join.bind(null, __dirname)
 
 const cleanupFilename = s => kebabCase(deburr(s))
 
@@ -18,7 +19,7 @@ function writeFailedTestInfo ({testName, testError, testCommands}) {
   // const runCmd = `npm run failed-test -- ${filename}`
   // pass filename as environment variable
 
-  const runCmd = `./on-failed.sh`
+  const runCmd = relative('..', 'on-failed.sh')
   const options = {
     failOnNonZeroExit: false,
     env: {
