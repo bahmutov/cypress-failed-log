@@ -81,5 +81,10 @@
       "beforeEach",
       "afterEach"
     ]
+  },
+  "dependencies": {
+    "lodash.deburr": "4.1.0",
+    "lodash.kebabcase": "4.1.0",
+    "lodash.reject": "4.6.0"
   }
 }

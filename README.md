@@ -8,15 +8,42 @@
 [![semantic-release][semantic-image] ][semantic-url]
 [![js-standard-style][standard-image]][standard-url]
 
+## Install
+
+Add this module as a dev dependency to your project
+
+```sh
+npm install --save-dev cypress-failed-log
+```
+
+Then include this module from your `cypress/support/index.js` file
+
+```js
+// cypress/support/index.js
+require('cypress-failed-log')
+```
+
+Add an NPM script `failed-test` that will get the name of the JSON file
+with failed test details.
+
+```json
+{
+  "scripts": {
+    "failed-test": "echo Test failed, details in $1"
+  }
+}
+```
+
+You can send the file as an email, upload it somewhere, post to a chat
+channel, etc.
+
 ### Small print
 
 Author: Gleb Bahmutov &lt;gleb.bahmutov@gmail.com&gt; &copy; 2017
 
-
 * [@bahmutov](https://twitter.com/bahmutov)
 * [glebbahmutov.com](http://glebbahmutov.com)
 * [blog](http://glebbahmutov.com/blog)
-
 
 License: MIT - do anything with the code, but don't blame me if it does not work.
 
