@@ -37,7 +37,7 @@ function writeFailedTestInfo ({testName, testError, testCommands}) {
     .log('ran "npm run failed-test" with the failed test filename', filename)
 }
 
-var loggedCommands
+var loggedCommands = []
 
 function startLogging () {
   console.log('Will log Cypress commands')
