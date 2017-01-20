@@ -6,8 +6,8 @@ const reject = require('lodash.reject')
 
 const cleanupFilename = s => kebabCase(deburr(s))
 
-function writeFailedTestInfo ({testName, testError, testCommands}) {
-  const info = {testName, testError, testCommands}
+function writeFailedTestInfo ({title, testName, testError, testCommands}) {
+  const info = {title, testName, testError, testCommands}
   const str = JSON.stringify(info, null, 2)
   const cleaned = cleanupFilename(testName)
   const filename = `failed-${cleaned}.json`
@@ -64,6 +64,7 @@ function onFailed () {
   if (this.currentTest.state === 'passed') {
     return
   }
+  const title = this.currentTest.title
   const testName = this.currentTest.fullTitle()
   const testError = this.currentTest.err.message
   // when running with UI, there are currentTest.commands
@@ -77,12 +78,13 @@ function onFailed () {
   const testCommands = reject(commands.filter(notEmpty), duplicate)
 
   console.log('=== test failed ===')
+  console.log(title)
   console.log(testName)
   console.log('=== commands ===')
   console.log(testCommands.join('\n'))
   console.log('=== error ===')
   console.log(testError)
-  writeFailedTestInfo({testName, testError, testCommands})
+  writeFailedTestInfo({title, testName, testError, testCommands})
 }
 
 startLogging()
