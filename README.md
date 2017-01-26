@@ -37,6 +37,18 @@ with failed test details.
 You can send the file as an email, upload it somewhere, post to a chat
 channel, etc.
 
+## JSON file fields
+
+The saved JSON file will have the following properties (see
+[src/index.js](src/index.js#L67))
+
+```
+title - the name of the test
+testName - full name of the test, including the suite name
+testError - error message string
+testCommands - array of strings, last failing command is last
+```
+
 ## Example
 
 Here is the failed test JSON file contents. The test name, the failure
@@ -44,6 +56,7 @@ and each test command before the test are recorded
 
 ```json
 {
+  "title": "loads the About tab",
   "testName": "Website loads the About tab",
   "testError": "Timed out retrying: Expected to find content: 'Join Us' but never did.",
   "testCommands": [
