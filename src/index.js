@@ -18,21 +18,39 @@ function writeFailedTestInfo ({title, testName, testError, testCommands}) {
   // const runCmd = `npm run failed-test -- ${filename}`
   // pass filename as environment variable
 
-  // for now assume we are running from the root of
-  // the project and the shell script is in node_modules
-  const runCmd = './node_modules/cypress-failed-log/on-failed.sh'
+  // try discovering the shell script filename
+  const candidates = [
+    './node_modules/cypress-failed-log/on-failed.sh',
+    './on-failed.sh'
+  ]
   const options = {
     failOnNonZeroExit: false,
     env: {
       FAILED_FILENAME: filename
     }
   }
-  cy.exec(runCmd, options)
+
+  function onFailedExec (result) {
+    console.log('running cy.exec has failed')
+    console.log(result)
+    cy.log(JSON.stringify(result))
+    cy.writeFile('failed-exec.json', JSON.stringify(result, null, 2))
+  }
+
+  cy.exec(candidates[0], options)
     .then(result => {
-      console.log('result of running npm command')
-      console.log(result)
-      cy.log(JSON.stringify(result))
-      cy.writeFile('failed-exec.json', JSON.stringify(result, null, 2))
+      if (result.code) {
+        onFailedExec(result)
+        return cy.exec(candidates[1], options)
+      } else {
+        console.log('ran npm command successfully', candidates[0])
+        return result
+      }
+    })
+    .then(result => {
+      if (result.code) {
+        onFailedExec(result)
+      }
     })
     .log('ran "npm run failed-test" with the failed test filename', filename)
 }
