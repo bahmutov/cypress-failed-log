@@ -55,7 +55,7 @@
     "deps": "deps-ok && dependency-check .",
     "issues": "git-issues",
     "license": "license-checker --production --onlyunknown --csv",
-    "lint": "standard --verbose --fix src/*.js",
+    "lint": "standard --verbose --fix src/*.js test/*.js",
     "pretest": "npm run lint",
     "secure": "nsp check",
     "size": "t=\"$(npm pack .)\"; wc -c \"${t}\"; tar tvf \"${t}\"; rm \"${t}\";",
@@ -63,7 +63,7 @@
     "unit": "mocha src/*-spec.js",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post",
     "failed-test": "echo Test failed, details in $1",
-    "verify-failed-json": "node cypress/verify-failed-json.js"
+    "verify-failed-json": "node test/verify-failed-json.js"
   },
   "devDependencies": {
     "ban-sensitive-files": "1.8.4",
