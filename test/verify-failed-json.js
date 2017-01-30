@@ -26,6 +26,8 @@ function checkJsonFile (filename) {
   la(is.object(result), 'expected an object from', jsonFilename, result)
 
   la(is.unemptyString(result.title), 'missing test title', result)
+  la(is.unemptyString(result.suiteName), 'missing suite name', result)
+
   la(is.unemptyString(result.testError), 'missing test error', result)
   la(is.strings(result.testCommands), 'missing test commands', result)
   la(result.testCommands[0].startsWith('visit'),

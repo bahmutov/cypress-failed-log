@@ -44,6 +44,7 @@ The saved JSON file will have the following properties (see
 
 ```
 title - the name of the test
+suiteName - the parent suite name
 testName - full name of the test, including the suite name
 testError - error message string
 testCommands - array of strings, last failing command is last
@@ -58,6 +59,7 @@ and each test command before the test are recorded
 ```json
 {
   "title": "loads the About tab",
+  "suiteName": "Website",
   "testName": "Website loads the About tab",
   "testError": "Timed out retrying: Expected to find content: 'Join Us' but never did.",
   "testCommands": [
@@ -71,7 +73,7 @@ and each test command before the test are recorded
     "contains Join Us",
     "assert expected **body :not(script):contains(**'Join Us'**), [type='submit'][value~='Join Us']** to exist in the DOM"
   ],
-  "screenshot": "opens-login.png"
+  "screenshot": "loads-the-about-tab.png"
 }
 ```
 

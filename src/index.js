@@ -6,9 +6,17 @@ const reject = require('lodash.reject')
 
 const cleanupFilename = s => kebabCase(deburr(s))
 
-function writeFailedTestInfo ({title, testName, testError, testCommands,
-  screenshot}) {
-  const info = {title, testName, testError, testCommands, screenshot}
+function writeFailedTestInfo ({
+  title, suiteName, testName,
+  testError, testCommands, screenshot}) {
+  const info = {
+    title,
+    suiteName,
+    testName,
+    testError,
+    testCommands,
+    screenshot
+  }
   const str = JSON.stringify(info, null, 2) + '\n'
   const cleaned = cleanupFilename(testName)
   const filename = `failed-${cleaned}.json`
@@ -98,6 +106,9 @@ function onFailed () {
   cy.screenshot(screenshotName)
   cy.wait(1000)
 
+  const suiteName = this.currentTest.parent &&
+    this.currentTest.parent.title
+
   const testError = this.currentTest.err.message
   // when running with UI, there are currentTest.commands
   // otherwise just use whatever we have recorded ourselves
@@ -113,6 +124,9 @@ function onFailed () {
 
   console.log('=== test failed ===')
   console.log(title)
+  if (suiteName) {
+    console.log('suite', suiteName)
+  }
   console.log(testName)
   console.log('=== error ===')
   console.log(testError)
@@ -121,7 +135,12 @@ function onFailed () {
   console.log('=== screenshot ===')
   console.log(screenshot)
   writeFailedTestInfo({
-    title, testName, testError, testCommands, screenshot
+    title,
+    suiteName,
+    testName,
+    testError,
+    testCommands,
+    screenshot
   })
 }
 
