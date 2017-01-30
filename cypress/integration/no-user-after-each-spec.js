@@ -1,10 +1,10 @@
-describe('cypress failed log without user afterEach', () => {
+describe('Without user afterEach', () => {
   beforeEach(function openUrl () {
     cy.visit('/')
   })
 
   // this test fails on purpose
-  it('finds aliens', () => {
+  it('finds aliens 2', () => {
     cy.contains('a', 'videos')
       .click()
       .wait(100)

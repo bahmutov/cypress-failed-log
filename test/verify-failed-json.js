@@ -4,14 +4,22 @@ const la = require('lazy-ass')
 const is = require('check-more-types')
 const fs = require('fs')
 const path = require('path')
+const relative = path.join.bind(null, __dirname)
+const inParentFolder = name => relative('..', name)
 
 const jsonFiles = [
+  'failed-without-user-after-each-finds-aliens-2.json',
   'failed-cypress-failed-log-finds-aliens.json'
 ]
 
+const cypress = require(inParentFolder('cypress.json'))
+const screenshotsFolder = inParentFolder(
+  cypress.screenshotsFolder || 'cypress/screenshots')
+console.log('screenshots in folder', screenshotsFolder)
+
 function checkJsonFile (filename) {
   la(is.unemptyString(filename), 'expected filename', filename)
-  const jsonFilename = path.join(__dirname, '..', filename)
+  const jsonFilename = inParentFolder(filename)
   la(fs.existsSync(jsonFilename), 'cannot find json file', jsonFilename)
 
   const result = require(jsonFilename)
@@ -22,6 +30,12 @@ function checkJsonFile (filename) {
   la(is.strings(result.testCommands), 'missing test commands', result)
   la(result.testCommands[0].startsWith('visit'),
     'expected first command to be visit', result.testCommands)
+
+  const screenshot = result.screenshot
+  la(is.unemptyString(screenshot), 'could not find screenshot', result)
+  const screenshotFilename = path.join(screenshotsFolder, screenshot)
+  la(fs.existsSync(screenshotFilename),
+    'could not find screenshot image', screenshotFilename)
 
   console.log('file %s looks ok', jsonFilename)
 }

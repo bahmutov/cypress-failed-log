@@ -125,21 +125,22 @@ function onFailed () {
 // "afterEach" function with our callback "onFailed". This ensures we run
 // first.
 
-const _afterEach = afterEach
-afterEach = (name, fn) => { // eslint-disable-line
-  if (typeof name === 'function') {
-    fn = name
-    name = fn.name
-  }
-  // before running the client function "fn"
-  // run our "onFailed" to capture the screenshot sooner
-  _afterEach(name, function () {
-    // TODO prevent running multiple times if there are multiple
-    // "afterEach" blocks in single suite
-    onFailed.call(this)
-    fn()
-  })
-}
+// const _afterEach = afterEach
+// afterEach = (name, fn) => { // eslint-disable-line
+//   if (typeof name === 'function') {
+//     fn = name
+//     name = fn.name
+//   }
+//   // before running the client function "fn"
+//   // run our "onFailed" to capture the screenshot sooner
+//   _afterEach(name, function () {
+//     // TODO prevent running multiple times if there are multiple
+//     // "afterEach" blocks in single suite
+//     onFailed.call(this)
+//     fn()
+//   })
+// }
 
 startLogging()
 beforeEach(initLog)
+afterEach(onFailed)
