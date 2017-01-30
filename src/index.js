@@ -6,8 +6,9 @@ const reject = require('lodash.reject')
 
 const cleanupFilename = s => kebabCase(deburr(s))
 
-function writeFailedTestInfo ({title, testName, testError, testCommands}) {
-  const info = {title, testName, testError, testCommands}
+function writeFailedTestInfo ({title, testName, testError, testCommands,
+  screenshot}) {
+  const info = {title, testName, testError, testCommands, screenshot}
   const str = JSON.stringify(info, null, 2) + '\n'
   const cleaned = cleanupFilename(testName)
   const filename = `failed-${cleaned}.json`
@@ -83,6 +84,10 @@ function onFailed () {
     return
   }
   const title = this.currentTest.title
+
+  const screenshotName = `${cleanupFilename(title)}-failed`
+  cy.screenshot(screenshotName)
+
   const testName = this.currentTest.fullTitle()
   const testError = this.currentTest.err.message
   // when running with UI, there are currentTest.commands
@@ -95,16 +100,46 @@ function onFailed () {
   // so filter and cleanup
   const testCommands = reject(commands.filter(notEmpty), duplicate)
 
+  const screenshot = `${screenshotName}.png`
+
   console.log('=== test failed ===')
   console.log(title)
   console.log(testName)
-  console.log('=== commands ===')
-  console.log(testCommands.join('\n'))
   console.log('=== error ===')
   console.log(testError)
-  writeFailedTestInfo({title, testName, testError, testCommands})
+  console.log('=== commands ===')
+  console.log(testCommands.join('\n'))
+  console.log('=== screenshot ===')
+  console.log(screenshot)
+  writeFailedTestInfo({
+    title, testName, testError, testCommands, screenshot
+  })
+}
+
+//   We have to do a hack to make sure OUR "afterEach" callback function
+// runs BEFORE any user supplied "afterEach" callback. This is necessary
+// to take screenshot of the failure AS SOON AS POSSIBLE.
+//   Otherwise commands executed by the user callback might destroys the
+// screen and add too many commands to the log, making post-mortem
+// triage very difficult. In this case we just wrap client supplied
+// "afterEach" function with our callback "onFailed". This ensures we run
+// first.
+
+const _afterEach = afterEach
+afterEach = (name, fn) => { // eslint-disable-line
+  if (typeof name === 'function') {
+    fn = name
+    name = fn.name
+  }
+  // before running the client function "fn"
+  // run our "onFailed" to capture the screenshot sooner
+  _afterEach(name, function () {
+    // TODO prevent running multiple times if there are multiple
+    // "afterEach" blocks in single suite
+    onFailed.call(this)
+    fn()
+  })
 }
 
 startLogging()
 beforeEach(initLog)
-afterEach(onFailed)

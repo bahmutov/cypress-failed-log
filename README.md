@@ -47,6 +47,7 @@ title - the name of the test
 testName - full name of the test, including the suite name
 testError - error message string
 testCommands - array of strings, last failing command is last
+screenshot - filename of PNG file taken right after failure
 ```
 
 ## Example
@@ -69,7 +70,8 @@ and each test command before the test are recorded
     "assert expected **#/about** to equal **#/about**",
     "contains Join Us",
     "assert expected **body :not(script):contains(**'Join Us'**), [type='submit'][value~='Join Us']** to exist in the DOM"
-  ]
+  ],
+  "screenshot": "opens-login.png"
 }
 ```
 

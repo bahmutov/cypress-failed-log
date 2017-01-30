@@ -1,13 +1,14 @@
 describe('cypress failed log', () => {
   const url = 'https://glebbahmutov.com'
 
-  beforeEach(() => {
+
+  beforeEach(function openUrl () {
     cy.visit(url)
   })
 
-  afterEach(() => {
+  afterEach(function makeDummyCommands () {
     // more dummy commands on purpose. Can we get
-    // the right screenshot when the test actuall failed?
+    // the right screenshot when the test actual failed?
     cy.visit(url)
       .wait(100)
       .wait(100)
