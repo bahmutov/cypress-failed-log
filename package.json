@@ -62,7 +62,8 @@
     "test": "npm run unit",
     "unit": "mocha src/*-spec.js",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post",
-    "failed-test": "echo Test failed, details in $1"
+    "failed-test": "echo Test failed, details in $1",
+    "verify-failed-json": "node cypress/verify-failed-json.js"
   },
   "devDependencies": {
     "ban-sensitive-files": "1.8.4",

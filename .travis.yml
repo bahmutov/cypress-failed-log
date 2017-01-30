@@ -13,6 +13,7 @@ script:
   - npm test
   # ignore result because is failing on purpose
   - cypress ci || true
+  - npm run verify-failed-json
 after_success:
   - npm run semantic-release
 branches:

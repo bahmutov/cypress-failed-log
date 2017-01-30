@@ -8,7 +8,7 @@ const cleanupFilename = s => kebabCase(deburr(s))
 
 function writeFailedTestInfo ({title, testName, testError, testCommands}) {
   const info = {title, testName, testError, testCommands}
-  const str = JSON.stringify(info, null, 2)
+  const str = JSON.stringify(info, null, 2) + '\n'
   const cleaned = cleanupFilename(testName)
   const filename = `failed-${cleaned}.json`
   cy.writeFile(filename, str)
