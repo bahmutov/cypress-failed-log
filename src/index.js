@@ -83,12 +83,21 @@ function onFailed () {
   if (this.currentTest.state === 'passed') {
     return
   }
-  const title = this.currentTest.title
-
-  const screenshotName = `${cleanupFilename(title)}-failed`
-  cy.screenshot(screenshotName)
-
   const testName = this.currentTest.fullTitle()
+  // prevents processing failed test twice - from our "afterEach" callback
+  // and from wrapping user "afterEach"
+  if (hasSeen(testName)) {
+    return
+  }
+  doneWithTest(testName)
+
+  const title = this.currentTest.title
+  const screenshotName = `${cleanupFilename(title)}-failed`
+  cy.wait(1000)
+    .log('waited for UI before capturing screenshot')
+  cy.screenshot(screenshotName)
+  cy.wait(1000)
+
   const testError = this.currentTest.err.message
   // when running with UI, there are currentTest.commands
   // otherwise just use whatever we have recorded ourselves
@@ -125,22 +134,30 @@ function onFailed () {
 // "afterEach" function with our callback "onFailed". This ensures we run
 // first.
 
-// const _afterEach = afterEach
-// afterEach = (name, fn) => { // eslint-disable-line
-//   if (typeof name === 'function') {
-//     fn = name
-//     name = fn.name
-//   }
-//   // before running the client function "fn"
-//   // run our "onFailed" to capture the screenshot sooner
-//   _afterEach(name, function () {
-//     // TODO prevent running multiple times if there are multiple
-//     // "afterEach" blocks in single suite
-//     onFailed.call(this)
-//     fn()
-//   })
-// }
+// remember which tests we have processed already
+const seenTests = {}
+function hasSeen (testName) {
+  return seenTests[testName]
+}
+function doneWithTest (testName) {
+  seenTests[testName] = true
+}
+
+const _afterEach = afterEach
+afterEach = (name, fn) => { // eslint-disable-line
+  if (typeof name === 'function') {
+    fn = name
+    name = fn.name
+  }
+  // before running the client function "fn"
+  // run our "onFailed" to capture the screenshot sooner
+  _afterEach(name, function () {
+    onFailed.call(this)
+    fn()
+  })
+}
 
 startLogging()
 beforeEach(initLog)
-afterEach(onFailed)
+// register our callback to process failed tests without wrapping
+_afterEach(onFailed)
