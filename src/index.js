@@ -64,7 +64,12 @@ function writeFailedTestInfo ({
         onFailedExec(result)
       }
     })
-    .log('ran "npm run failed-test" with the failed test filename', filename)
+    // .log('ran "npm run failed-test" with the failed test filename', filename)
+    .then(result => {
+      console.log('exec output')
+      console.log(result)
+      cy.log(result.stdout)
+    })
 }
 
 var loggedCommands = []

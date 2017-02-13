@@ -2,5 +2,5 @@
 
 set -e
 
-echo "Failed with filename $FAILED_FILENAME"
-npm run failed-test -- $FAILED_FILENAME
+# echo "Failed with filename $FAILED_FILENAME"
+npm run -s failed-test -- $FAILED_FILENAME
