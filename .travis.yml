@@ -11,6 +11,7 @@ before_script:
   - npm i -g cypress-cli
 script:
   - npm test
+  - npm run clean
   # ignore result because is failing on purpose
   - cypress ci || true
   - npm run verify-failed-json

@@ -64,7 +64,7 @@
     "semantic-release": "semantic-release pre && npm publish && semantic-release post",
     "failed-test": "echo Test failed, details in $1",
     "verify-failed-json": "node test/verify-failed-json.js",
-    "clean": "rm failed-*.json"
+    "clean": "rm failed-*.json || true"
   },
   "devDependencies": {
     "ban-sensitive-files": "1.8.4",
