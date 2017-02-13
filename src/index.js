@@ -3,13 +3,16 @@
 const kebabCase = require('lodash.kebabcase')
 const deburr = require('lodash.deburr')
 const reject = require('lodash.reject')
+const path = require('path')
 
 const cleanupFilename = s => kebabCase(deburr(s))
 
 function writeFailedTestInfo ({
+  specName,
   title, suiteName, testName,
   testError, testCommands, screenshot}) {
   const info = {
+    specName,
     title,
     suiteName,
     testName,
@@ -120,9 +123,13 @@ function onFailed () {
   // so filter and cleanup
   const testCommands = reject(commands.filter(notEmpty), duplicate)
 
+  const specName = path.basename(window.location.pathname)
+
   const screenshot = `${screenshotName}.png`
 
   console.log('=== test failed ===')
+  console.log(specName)
+  console.log('=== title ===')
   console.log(title)
   if (suiteName) {
     console.log('suite', suiteName)
@@ -135,6 +142,7 @@ function onFailed () {
   console.log('=== screenshot ===')
   console.log(screenshot)
   writeFailedTestInfo({
+    specName,
     title,
     suiteName,
     testName,

@@ -43,6 +43,7 @@ The saved JSON file will have the following properties (see
 [src/index.js](src/index.js#L67))
 
 ```
+specName - filename of the spec
 title - the name of the test
 suiteName - the parent suite name
 testName - full name of the test, including the suite name
@@ -58,6 +59,7 @@ and each test command before the test are recorded
 
 ```json
 {
+  "specName": "failing-spec.js",
   "title": "loads the About tab",
   "suiteName": "Website",
   "testName": "Website loads the About tab",

@@ -25,6 +25,8 @@ function checkJsonFile (filename) {
   const result = require(jsonFilename)
   la(is.object(result), 'expected an object from', jsonFilename, result)
 
+  la(is.unemptyString(result.specName), 'missing spec file name', result)
+
   la(is.unemptyString(result.title), 'missing test title', result)
   la(is.unemptyString(result.suiteName), 'missing suite name', result)
 
