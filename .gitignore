@@ -3,3 +3,4 @@ npm-debug.log
 failed-*.json
 .DS_Store
 cypress/screenshots/
+cypress/videos/

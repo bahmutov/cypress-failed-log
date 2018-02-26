@@ -32,6 +32,10 @@ function checkJsonFile (filename) {
 
   la(is.unemptyString(result.testError), 'missing test error', result)
   la(is.strings(result.testCommands), 'missing test commands', result)
+
+  la(is.unemptyString(result.testCommands),
+    'should have test commands in', filename, result)
+
   la(result.testCommands[0].startsWith('visit'),
     'expected first command to be visit', result.testCommands)
 

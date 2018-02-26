@@ -8,12 +8,12 @@ node_js:
   - '6'
 before_script:
   - npm prune
-  - npm i -g cypress-cli
+  - npm install
 script:
   - npm test
   - npm run clean
   # ignore result because is failing on purpose
-  - cypress ci || true
+  - npm run cy:run || true
   - npm run verify-failed-json
 after_success:
   - npm run semantic-release

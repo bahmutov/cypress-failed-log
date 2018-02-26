@@ -42,7 +42,6 @@
   ],
   "license": "MIT",
   "main": "src/",
-  "noScopeName": "cypress-failed-log",
   "publishConfig": {
     "registry": "http://registry.npmjs.org/"
   },
@@ -64,10 +63,13 @@
     "semantic-release": "semantic-release pre && npm publish && semantic-release post",
     "failed-test": "echo Test failed, details in $1",
     "verify-failed-json": "node test/verify-failed-json.js",
-    "clean": "rm failed-*.json || true"
+    "clean": "rm failed-*.json || true",
+    "cy:open": "cypress open",
+    "cy:run": "cypress run"
   },
   "devDependencies": {
     "ban-sensitive-files": "1.9.2",
+    "cypress": "2.0.4",
     "dependency-check": "3.0.0",
     "deps-ok": "1.2.2",
     "git-issues": "1.3.1",
@@ -75,8 +77,8 @@
     "mocha": "5.0.1",
     "nsp": "3.2.1",
     "pre-git": "3.17.0",
-    "standard": "11.0.0",
-    "semantic-release": "^12.4.1"
+    "semantic-release": "^12.4.1",
+    "standard": "11.0.0"
   },
   "standard": {
     "globals": [
@@ -90,5 +92,8 @@
     "lodash.deburr": "4.1.0",
     "lodash.kebabcase": "4.1.1",
     "lodash.reject": "4.6.0"
+  },
+  "release": {
+    "analyzeCommits": "simple-commit-message"
   }
 }

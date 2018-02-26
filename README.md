@@ -15,7 +15,7 @@
 Add this module as a dev dependency to your project
 
 ```sh
-npm install --save-dev cypress-failed-log
+npm install --save-dev cypress cypress-failed-log
 ```
 
 Then include this module from your `cypress/support/index.js` file
