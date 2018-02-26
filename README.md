@@ -1,5 +1,7 @@
 # cypress-failed-log
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/bahmutov/cypress-failed-log.svg)](https://greenkeeper.io/)
+
 > Gets you the Cypress test command log as JSON on failure
 
 [![NPM][npm-icon] ][npm-url]

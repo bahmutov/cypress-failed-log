@@ -67,16 +67,16 @@
     "clean": "rm failed-*.json || true"
   },
   "devDependencies": {
-    "ban-sensitive-files": "1.8.4",
-    "dependency-check": "2.6.0",
-    "deps-ok": "1.2.0",
+    "ban-sensitive-files": "1.9.2",
+    "dependency-check": "3.0.0",
+    "deps-ok": "1.2.2",
     "git-issues": "1.3.1",
-    "license-checker": "8.0.3",
-    "mocha": "3.2.0",
-    "nsp": "2.6.2",
-    "pre-git": "3.12.0",
-    "standard": "8.6.0",
-    "semantic-release": "^6.3.2"
+    "license-checker": "16.0.0",
+    "mocha": "5.0.1",
+    "nsp": "3.2.1",
+    "pre-git": "3.17.0",
+    "standard": "11.0.0",
+    "semantic-release": "^12.4.1"
   },
   "standard": {
     "globals": [
@@ -88,7 +88,7 @@
   },
   "dependencies": {
     "lodash.deburr": "4.1.0",
-    "lodash.kebabcase": "4.1.0",
+    "lodash.kebabcase": "4.1.1",
     "lodash.reject": "4.6.0"
   }
 }
