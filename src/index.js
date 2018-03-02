@@ -1,3 +1,4 @@
+/// <reference types="cypress" />
 'use strict'
 
 const kebabCase = require('lodash.kebabcase')
@@ -6,6 +7,10 @@ const reject = require('lodash.reject')
 const path = require('path')
 
 const cleanupFilename = s => kebabCase(deburr(s))
+const useSingleQuotes = s => Cypress._.replace(
+  Cypress._.replace(s, /'/g, "\\'"),
+  /"/g, "'"
+)
 
 function writeFailedTestInfo ({
   specName,
@@ -74,10 +79,36 @@ function writeFailedTestInfo ({
 
 var loggedCommands = []
 
+const stringify = x => useSingleQuotes(JSON.stringify(x))
+
+const isSimple = x =>
+  Cypress._.isString(x) ||
+  Cypress._.isNumber(x) ||
+  Cypress._.isPlainObject(x)
+
 function startLogging () {
   console.log('Will log Cypress commands')
-  Cypress.on('log', function (e) {
-    loggedCommands.push(describeCommand(e))
+
+  // should we use command:start or command:end
+  // or combination of both to keep track?
+  // hmm, not every command seems to show up in command:end
+  Cypress.on('command:end', ({attributes}) => {
+    const str = attributes.name + ' ' + attributes.args.map(stringify).join(' ')
+
+    if (isSimple(attributes.subject)) {
+      try {
+        const s = stringify(attributes.subject)
+        loggedCommands.push(s + ' ' + str)
+      } catch (e) {
+        // if subject is complex (like Window or circular element)
+        // use just name and arguments
+        console.error('could not convert subject', attributes.subject)
+        console.error('for command', attributes)
+        loggedCommands.push(str)
+      }
+    } else {
+      loggedCommands.push(str)
+    }
   })
 }
 
@@ -92,7 +123,7 @@ function duplicate (s, k, collection) {
   return s === collection[k - 1]
 }
 
-const describeCommand = c => `${c.name} ${c.message}`.trim()
+// const describeCommand = c => `${c.name} ${c.message}`.trim()
 const notEmpty = c => c
 
 function onFailed () {
@@ -118,10 +149,8 @@ function onFailed () {
     this.currentTest.parent.title
 
   const testError = this.currentTest.err.message
-  // when running with UI, there are currentTest.commands
-  // otherwise just use whatever we have recorded ourselves
-  const commands = this.currentTest.commands
-    ? this.currentTest.commands.map(describeCommand) : loggedCommands
+
+  const commands = loggedCommands
 
   // sometimes the message is the same, since the log command events
   // repeat when state changes (command starts, runs, etc)

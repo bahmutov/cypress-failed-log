@@ -1,6 +1,6 @@
 describe('cypress failed log', () => {
   beforeEach(function openUrl () {
-    cy.visit('/')
+    cy.visit('test-page1.html')
   })
 
   afterEach(function makeDummyCommands () {
