@@ -60,7 +60,7 @@
     "size": "t=\"$(npm pack .)\"; wc -c \"${t}\"; tar tvf \"${t}\"; rm \"${t}\";",
     "test": "npm run unit",
     "unit": "mocha src/*-spec.js",
-    "semantic-release": "semantic-release pre && npm publish && semantic-release post",
+    "semantic-release": "semantic-release",
     "failed-test": "echo Test failed, details in $1",
     "verify-failed-json": "node test/verify-failed-json.js",
     "clean": "rm failed-*.json || true",
