@@ -29,6 +29,7 @@ Add an NPM script `failed-test` that will get the name of the JSON file
 with failed test details.
 
 ```json
+// package.json
 {
   "scripts": {
     "failed-test": "echo Test failed, details in $1"
@@ -41,7 +42,7 @@ channel, etc.
 
 ## JSON file fields
 
-The saved JSON file will have the following properties (see
+The saved JSON file will live in `cypress/logs/` and have the following properties (see
 [src/index.js](src/index.js#L67))
 
 ```

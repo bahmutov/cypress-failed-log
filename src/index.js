@@ -7,7 +7,7 @@ const reject = require('lodash.reject')
 const path = require('path')
 
 const cleanupFilename = s => kebabCase(deburr(s))
-const getFilepath = filename => `cypress/logs/${filename}`
+const getFilepath = filename => path.join('cypress', 'logs', filename)
 const useSingleQuotes = s => Cypress._.replace(
   Cypress._.replace(s, /'/g, "\\'"),
   /"/g, "'"
@@ -45,7 +45,7 @@ function writeFailedTestInfo ({
   const options = {
     failOnNonZeroExit: false,
     env: {
-      FAILED_FILENAME: filename
+      FAILED_FILENAME: filepath
     }
   }
 
@@ -72,7 +72,7 @@ function writeFailedTestInfo ({
         onFailedExec(result)
       }
     })
-    // .log('ran "npm run failed-test" with the failed test filename', filename)
+    // .log('ran "npm run failed-test" with the failed test filename', filepath)
     .then(result => {
       console.log('exec output')
       console.log(result)
