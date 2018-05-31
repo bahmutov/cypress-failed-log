@@ -17,9 +17,12 @@ const screenshotsFolder = inParentFolder(
   cypress.screenshotsFolder || 'cypress/screenshots')
 console.log('screenshots in folder', screenshotsFolder)
 
+const logsFolder = inParentFolder('cypress/logs');
+console.log('logs in folder', logsFolder)
+
 function checkJsonFile (filename) {
   la(is.unemptyString(filename), 'expected filename', filename)
-  const jsonFilename = inParentFolder(filename)
+  const jsonFilename = path.join(logsFolder, filename)
   la(fs.existsSync(jsonFilename), 'cannot find json file', jsonFilename)
 
   const result = require(jsonFilename)
