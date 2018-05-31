@@ -5,6 +5,7 @@ const kebabCase = require('lodash.kebabcase')
 const deburr = require('lodash.deburr')
 const reject = require('lodash.reject')
 const path = require('path')
+const util = require('util')
 
 const cleanupFilename = s => kebabCase(deburr(s))
 const getFilepath = filename => path.join('cypress', 'logs', filename)
@@ -26,7 +27,7 @@ function writeFailedTestInfo ({
     testCommands,
     screenshot
   }
-  const str = JSON.stringify(info, null, 2) + '\n'
+  const str = util.inspect(info) + '\n'
   const cleaned = cleanupFilename(testName)
   const filename = `failed-${cleaned}.json`
   const filepath = getFilepath(filename)
@@ -52,9 +53,9 @@ function writeFailedTestInfo ({
   function onFailedExec (result) {
     console.log('running cy.exec has failed')
     console.log(result)
-    cy.log(JSON.stringify(result))
+    cy.log(util.inspect(result))
     const failedExecFilepath = getFilepath('failed-exec.json')
-    cy.writeFile(failedExecFilepath, JSON.stringify(result, null, 2))
+    cy.writeFile(failedExecFilepath, util.inspect(result))
   }
 
   cy.exec(candidates[0], options)
@@ -82,7 +83,7 @@ function writeFailedTestInfo ({
 
 var loggedCommands = []
 
-const stringify = x => useSingleQuotes(JSON.stringify(x))
+const stringify = x => useSingleQuotes(util.inspect(x))
 
 const isSimple = x =>
   Cypress._.isString(x) ||
