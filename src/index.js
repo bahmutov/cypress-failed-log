@@ -7,6 +7,7 @@ const reject = require('lodash.reject')
 const path = require('path')
 
 const cleanupFilename = s => kebabCase(deburr(s))
+const getFilepath = filename => `cypress/logs/${filename}`
 const useSingleQuotes = s => Cypress._.replace(
   Cypress._.replace(s, /'/g, "\\'"),
   /"/g, "'"
@@ -28,7 +29,8 @@ function writeFailedTestInfo ({
   const str = JSON.stringify(info, null, 2) + '\n'
   const cleaned = cleanupFilename(testName)
   const filename = `failed-${cleaned}.json`
-  cy.writeFile(filename, str)
+  const filepath = getFilepath(filename)
+  cy.writeFile(filepath, str)
     .log('saved failed test information')
 
   // work around shell ENOENT failure in CI container
@@ -51,7 +53,8 @@ function writeFailedTestInfo ({
     console.log('running cy.exec has failed')
     console.log(result)
     cy.log(JSON.stringify(result))
-    cy.writeFile('failed-exec.json', JSON.stringify(result, null, 2))
+    const failedExecFilepath = getFilepath('failed-exec.json')
+    cy.writeFile(failedExecFilepath, JSON.stringify(result, null, 2))
   }
 
   cy.exec(candidates[0], options)
