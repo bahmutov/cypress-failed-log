@@ -17,7 +17,7 @@ const screenshotsFolder = inParentFolder(
   cypress.screenshotsFolder || 'cypress/screenshots')
 console.log('screenshots in folder', screenshotsFolder)
 
-const logsFolder = inParentFolder('cypress/logs');
+const logsFolder = inParentFolder('cypress/logs')
 console.log('logs in folder', logsFolder)
 
 function checkJsonFile (filename) {
