@@ -79,7 +79,7 @@
     "pre-git": "3.17.0",
     "semantic-release": "15.0.0",
     "simple-commit-message": "4.0.3",
-    "standard": "11.0.0"
+    "standard": "11.0.1"
   },
   "standard": {
     "globals": [
