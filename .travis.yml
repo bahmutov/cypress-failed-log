@@ -6,9 +6,12 @@ notifications:
   email: true
 node_js:
   - '8'
+cache:
+  directories:
+    - ~/.npm
+    - ~/.cache
 before_script:
-  - npm prune
-  - npm install
+  - npm ci
 script:
   - npm test
   - npm run clean
