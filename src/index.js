@@ -114,6 +114,12 @@ function startLogging () {
       loggedCommands.push(str)
     }
   })
+
+  Cypress.on('log:added', ({ name, message }) => {
+    if (name.startsWith('spy-') && message !== undefined) {
+      loggedCommands.push(`${name} - ${message}`)
+    }
+  })
 }
 
 function initLog () {
