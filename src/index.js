@@ -5,6 +5,7 @@ const kebabCase = require('lodash.kebabcase')
 const deburr = require('lodash.deburr')
 const reject = require('lodash.reject')
 const path = require('path')
+const util = require('util')
 
 const cleanupFilename = s => kebabCase(deburr(s))
 const getFilepath = filename => path.join('cypress', 'logs', filename)
@@ -82,7 +83,7 @@ function writeFailedTestInfo ({
 
 var loggedCommands = []
 
-const stringify = x => useSingleQuotes(JSON.stringify(x))
+const stringify = x => useSingleQuotes(JSON.stringify(util.inspect(x)))
 
 const isSimple = x =>
   Cypress._.isString(x) ||
