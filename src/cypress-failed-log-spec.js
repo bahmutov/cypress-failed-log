@@ -20,12 +20,17 @@ describe('cypress-failed-log', () => {
 
   it('runs spec a', () => {
     const spec = 'cypress/integration/a.js'
+    terminalBanner(`Starting spec ${spec} at ${new Date()}`, '*')
+
     return cypress
       .run({
         spec
       })
       .tap(() => {
-        terminalBanner(`Cypress run finished for: ${spec}`, '*')
+        terminalBanner(
+          `Cypress run finished for: ${spec} at ${new Date()}`,
+          '*'
+        )
       })
       .then(
         pick([
