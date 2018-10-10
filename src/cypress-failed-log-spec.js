@@ -6,13 +6,26 @@ const snapshot = require('snap-shot-it')
 const { pick } = require('ramda')
 const { existsSync } = require('fs')
 const { join } = require('path')
+const rimraf = require('rimraf')
+const debug = require('debug')('test')
+const { terminalBanner } = require('terminal-banner')
 
 /* global describe, it */
 describe('cypress-failed-log', () => {
+  beforeEach(() => {
+    const logsFolder = join(__dirname, '..', 'cypress', 'logs')
+    debug('deleting folder %s', logsFolder)
+    rimraf.sync(logsFolder)
+  })
+
   it('runs spec a', () => {
+    const spec = 'cypress/integration/a.js'
     return cypress
       .run({
-        spec: 'cypress/integration/a.js'
+        spec
+      })
+      .tap(() => {
+        terminalBanner(`Cypress run finished for: ${spec}`, '*')
       })
       .then(
         pick([
@@ -24,6 +37,7 @@ describe('cypress-failed-log', () => {
         ])
       )
       .then(tests => {
+        debug('finished tests stats %o', tests)
         snapshot('spec a.js finished with', tests)
       })
       .then(() => {
