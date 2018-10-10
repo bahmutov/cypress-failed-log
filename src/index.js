@@ -17,7 +17,7 @@ const useSingleQuotes = s => Cypress._.replace(
 function writeFailedTestInfo ({
   specName,
   title, suiteName, testName,
-  testError, testCommands, screenshot}) {
+  testError, testCommands, screenshot }) {
   const info = {
     specName,
     title,
@@ -32,53 +32,53 @@ function writeFailedTestInfo ({
   const filename = `failed-${cleaned}.json`
   const filepath = getFilepath(filename)
   cy.writeFile(filepath, str)
-    .log('saved failed test information')
+    .log('saved failed test information to %s', filepath)
 
   // work around shell ENOENT failure in CI container
   // const runCmd = `npm run failed-test -- ${filename}`
   // pass filename as environment variable
 
   // try discovering the shell script filename
-  const candidates = [
-    './node_modules/cypress-failed-log/on-failed.sh',
-    './on-failed.sh'
-  ]
-  const options = {
-    failOnNonZeroExit: false,
-    env: {
-      FAILED_FILENAME: filepath
-    }
-  }
+  // const candidates = [
+  //   './node_modules/cypress-failed-log/on-failed.sh',
+  //   './on-failed.sh'
+  // ]
+  // const options = {
+  //   failOnNonZeroExit: false,
+  //   env: {
+  //     FAILED_FILENAME: filepath
+  //   }
+  // }
 
-  function onFailedExec (result) {
-    console.log('running cy.exec has failed')
-    console.log(result)
-    cy.log(JSON.stringify(result))
-    const failedExecFilepath = getFilepath('failed-exec.json')
-    cy.writeFile(failedExecFilepath, JSON.stringify(result, null, 2))
-  }
+  // function onFailedExec (result) {
+  //   console.log('running cy.exec has failed')
+  //   console.log(result)
+  //   cy.log(JSON.stringify(result))
+  //   const failedExecFilepath = getFilepath('failed-exec.json')
+  //   cy.writeFile(failedExecFilepath, JSON.stringify(result, null, 2))
+  // }
 
-  cy.exec(candidates[0], options)
-    .then(result => {
-      if (result.code) {
-        onFailedExec(result)
-        return cy.exec(candidates[1], options)
-      } else {
-        console.log('ran npm command successfully', candidates[0])
-        return result
-      }
-    })
-    .then(result => {
-      if (result.code) {
-        onFailedExec(result)
-      }
-    })
-    // .log('ran "npm run failed-test" with the failed test filename', filepath)
-    .then(result => {
-      console.log('exec output')
-      console.log(result)
-      cy.log(result.stdout)
-    })
+  // cy.exec(candidates[0], options)
+  //   .then(result => {
+  //     if (result.code) {
+  //       onFailedExec(result)
+  //       return cy.exec(candidates[1], options)
+  //     } else {
+  //       console.log('ran npm command successfully', candidates[0])
+  //       return result
+  //     }
+  //   })
+  //   .then(result => {
+  //     if (result.code) {
+  //       onFailedExec(result)
+  //     }
+  //   })
+  //   // .log('ran "npm run failed-test" with the failed test filename', filepath)
+  //   .then(result => {
+  //     console.log('exec output')
+  //     console.log(result)
+  //     cy.log(result.stdout)
+  //   })
 }
 
 var loggedCommands = []
@@ -96,7 +96,7 @@ function startLogging () {
   // should we use command:start or command:end
   // or combination of both to keep track?
   // hmm, not every command seems to show up in command:end
-  Cypress.on('command:end', ({attributes}) => {
+  Cypress.on('command:end', ({ attributes }) => {
     const str = attributes.name + ' ' + attributes.args.map(stringify).join(' ')
 
     if (isSimple(attributes.subject)) {
