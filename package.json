@@ -6,7 +6,6 @@
   "bugs": "https://github.com/bahmutov/cypress-failed-log/issues",
   "config": {
     "pre-git": {
-      "commit-msg": "simple",
       "pre-commit": [
         "npm prune",
         "npm run deps",
@@ -87,7 +86,6 @@
     "ramda": "0.25.0",
     "rimraf": "2.6.2",
     "semantic-release": "15.9.17",
-    "simple-commit-message": "4.0.3",
     "snap-shot-it": "6.1.10",
     "standard": "12.0.1",
     "stop-only": "2.2.4",
