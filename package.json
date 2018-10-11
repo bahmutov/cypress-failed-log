@@ -97,10 +97,7 @@
     ]
   },
   "dependencies": {
-    "debug": "4.1.0",
-    "lodash.deburr": "4.1.0",
-    "lodash.kebabcase": "4.1.1",
-    "lodash.reject": "4.6.0"
+    "debug": "4.1.0"
   },
   "release": {
     "analyzeCommits": "simple-commit-message"

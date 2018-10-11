@@ -81,13 +81,17 @@ and each test command before the test are recorded
 }
 ```
 
+## Debugging
+
+To turn on [`debug`](https://github.com/visionmedia/debug#readme) messages in the browser, open in Cypress browser DevTools console and enter `localStorage.debug = 'cypress-failed-log'`, then reload the spec. You should see log messages.
+
 ### Small print
 
 Author: Gleb Bahmutov &lt;gleb.bahmutov@gmail.com&gt; &copy; 2017
 
-* [@bahmutov](https://twitter.com/bahmutov)
-* [glebbahmutov.com](http://glebbahmutov.com)
-* [blog](http://glebbahmutov.com/blog)
+- [@bahmutov](https://twitter.com/bahmutov)
+- [glebbahmutov.com](http://glebbahmutov.com)
+- [blog](http://glebbahmutov.com/blog)
 
 License: MIT - do anything with the code, but don't blame me if it does not work.
 

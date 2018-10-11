@@ -1,13 +1,10 @@
 /// <reference types="cypress" />
 'use strict'
 
-// ? why are we not using Cypress._ ?
-const kebabCase = require('lodash.kebabcase')
-const deburr = require('lodash.deburr')
 const path = require('path')
 const debug = require('debug')('cypress-failed-log')
 
-const cleanupFilename = s => kebabCase(deburr(s))
+const cleanupFilename = s => Cypress._.kebabCase(Cypress._.deburr(s))
 const getFilepath = filename => path.join('cypress', 'logs', filename)
 
 function writeFailedTestInfo ({
@@ -41,53 +38,12 @@ let savingCommands = false
 let loggedCommands = []
 
 function startLogging () {
-  console.log('Will log Cypress commands')
-
-  // const logCommand = options => {
-  //   debug('log command', options)
-  //   const { attributes } = options
-  //   const str =
-  //     options.options +
-  //     ' ' +
-  //     attributes.name +
-  //     ' ' +
-  //     attributes.args.map(stringify).join(' ')
-
-  //   if (isSimple(attributes.subject)) {
-  //     try {
-  //       const s = stringify(attributes.subject)
-  //       // loggedCommands.push({
-  //       //   id: attributes.chainerId,
-  //       //   message: s + ' ' + str
-  //       // })
-  //     } catch (e) {
-  //       // if subject is complex (like Window or circular element)
-  //       // use just name and arguments
-  //       console.error('could not convert subject', attributes.subject)
-  //       console.error('for command', attributes)
-  //       // loggedCommands.push({
-  //       //   id: attributes.chainerId,
-  //       //   message: str
-  //       // })
-  //     }
-  //   } else {
-  //     // loggedCommands.push({
-  //     //   id: attributes.chainerId,
-  //     //   message: str
-  //     // })
-  //   }
-  // }
-
-  // Cypress.on('command:start', logCommand)
+  debug('will log Cypress commands')
 
   Cypress.on('test:before:run', () => {
     debug('before test run')
     savingCommands = true
   })
-
-  // Cypress.on('test:after:run', () => {
-  //   debug('after test run')
-  // })
 
   // should we use command:start or command:end
   // or combination of both to keep track?
@@ -102,10 +58,8 @@ function startLogging () {
       const log = {
         message: options.name + ' ' + options.message
       }
-      console.log(log)
+      debug(log)
       loggedCommands.push(log)
-      // console.log(stringify(options.consoleProps))
-      // cy.task('log', options.consoleProps, { log: false })
     }
   })
 }
@@ -113,16 +67,6 @@ function startLogging () {
 function initLog () {
   loggedCommands = []
 }
-
-// function duplicate (s, k, collection) {
-//   if (k === 0) {
-//     return
-//   }
-//   return s.id === collection[k - 1].id
-// }
-
-// const describeCommand = c => `${c.name} ${c.message}`.trim()
-// const notEmpty = c => c
 
 function onFailed () {
   savingCommands = false

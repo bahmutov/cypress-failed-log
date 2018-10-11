@@ -54,6 +54,8 @@ describe('cypress-failed-log', () => {
           'failed-root-suite-first-context-has-second-test-failing.json'
         )
         la(existsSync(logFilename), 'cannot find file', logFilename)
+        const saved = require(logFilename)
+        snapshot('saved commands from second test', saved.testCommands)
       })
       .then(() => {
         const logFilename = join(
@@ -64,6 +66,8 @@ describe('cypress-failed-log', () => {
           'failed-root-suite-first-context-has-third-test-failing.json'
         )
         la(existsSync(logFilename), 'cannot find file', logFilename)
+        const saved = require(logFilename)
+        snapshot('saved commands from third test', saved.testCommands)
       })
   })
 })
