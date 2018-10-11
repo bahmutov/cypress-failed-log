@@ -117,7 +117,8 @@ function onFailed () {
   console.log(testCommands.join('\n'))
   console.log('=== screenshot ===')
   console.log(screenshot)
-  writeFailedTestInfo({
+
+  const info = {
     specName,
     title,
     suiteName,
@@ -125,7 +126,10 @@ function onFailed () {
     testError,
     testCommands,
     screenshot
-  })
+  }
+  writeFailedTestInfo(info)
+
+  cy.task('failed', info, { log: false })
 }
 
 //   We have to do a hack to make sure OUR "afterEach" callback function
