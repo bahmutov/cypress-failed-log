@@ -1,6 +1,6 @@
 # cypress-failed-log
 
-> Gets you the Cypress test command log as JSON on failure
+> Shows the commands from [Cypress.io](https://www.cypress.io) failed test in the terminal.
 
 [![NPM][npm-icon] ][npm-url]
 
@@ -17,32 +17,31 @@ Add this module as a dev dependency to your project
 npm install --save-dev cypress cypress-failed-log
 ```
 
-Then include this module from your `cypress/support/index.js` file
+Then include this module from your [cypress/support/index.js](cypress/support/index.js) file
 
 ```js
 // cypress/support/index.js
 require('cypress-failed-log')
 ```
 
-Add an NPM script `failed-test` that will get the name of the JSON file
-with failed test details.
+and in [cypress/plugins/index.js](cypress/plugins/index.js) file add task `failed`
 
-```json
-// package.json
-{
-  "scripts": {
-    "failed-test": "echo Test failed, details in $1"
-  }
+```js
+// cypress/plugins/index.js
+module.exports = (on, config) => {
+  on('task', {
+    failed: require('cypress-failed-log/src/failed')(),
+  })
 }
 ```
 
-You can send the file as an email, upload it somewhere, post to a chat
-channel, etc.
+When Cypress runs, you will see commands including the failed one, right in the terminal
 
-## JSON file fields
+![Failed terminal output](images/failed.png)
 
-The saved JSON file will live in `cypress/logs/` and have the following properties (see
-[src/index.js](src/index.js#L67))
+## JSON file
+
+In addition, all failed commands will be saved into a JSON file. The saved JSON file will live in `cypress/logs/` and have the following properties:
 
 ```
 specName - filename of the spec
@@ -90,8 +89,8 @@ To turn on [`debug`](https://github.com/visionmedia/debug#readme) messages in th
 Author: Gleb Bahmutov &lt;gleb.bahmutov@gmail.com&gt; &copy; 2017
 
 - [@bahmutov](https://twitter.com/bahmutov)
-- [glebbahmutov.com](http://glebbahmutov.com)
-- [blog](http://glebbahmutov.com/blog)
+- [glebbahmutov.com](https://glebbahmutov.com)
+- [blog](https://glebbahmutov.com/blog)
 
 License: MIT - do anything with the code, but don't blame me if it does not work.
 

@@ -1,5 +1,7 @@
 'use strict'
 
+require('mocha-banner').register()
+
 const la = require('lazy-ass')
 const cypress = require('cypress')
 const snapshot = require('snap-shot-it')
@@ -71,7 +73,7 @@ describe('cypress-failed-log', () => {
       })
   })
 
-  it.only('runs spec test-page1-spec', () => {
+  it('runs spec test-page1-spec', () => {
     const spec = 'cypress/integration/test-page1-spec.js'
     terminalBanner(`Starting spec ${spec} at ${new Date()}`, '*')
 
