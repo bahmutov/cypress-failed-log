@@ -8,16 +8,18 @@ node_js:
   - '10'
 cache:
   directories:
+    # cache NPM modules
     - ~/.npm
+    # cache Cypress binary
     - ~/.cache
 before_script:
   - npm ci
 script:
   - npm test
-  - npm run clean
+  # - npm run clean
   # ignore result because is failing on purpose
-  - npm run cy:run || true
-  - npm run verify-failed-json
+  # - npm run cy:run || true
+  # - npm run verify-failed-json
 after_success:
   - npm run semantic-release
 branches:

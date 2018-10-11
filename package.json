@@ -14,6 +14,7 @@
         "npm run ban"
       ],
       "pre-push": [
+        "npm run stop-only",
         "npm run secure",
         "npm run license",
         "npm run ban -- --all",
@@ -28,8 +29,7 @@
   },
   "files": [
     "src/*.js",
-    "!src/*-spec.js",
-    "on-failed.sh"
+    "!src/*-spec.js"
   ],
   "homepage": "https://github.com/bahmutov/cypress-failed-log#readme",
   "keywords": [
@@ -59,27 +59,39 @@
     "secure": "nsp check",
     "size": "t=\"$(npm pack .)\"; wc -c \"${t}\"; tar tvf \"${t}\"; rm \"${t}\";",
     "test": "npm run unit",
-    "unit": "mocha src/*-spec.js",
+    "unit": "mocha --timeout 180000 src/*-spec.js",
+    "postunit": "npm run warn-only",
     "semantic-release": "semantic-release",
     "failed-test": "echo Test failed, details in $1",
     "verify-failed-json": "node test/verify-failed-json.js",
     "clean": "rm failed-*.json || true",
     "cy:open": "cypress open",
-    "cy:run": "cypress run"
+    "cy:run": "cypress run",
+    "warn-only": "stop-only --warn -f src",
+    "stop-only": "stop-only -f src"
   },
   "devDependencies": {
+    "@types/ramda": "0.25.39",
     "ban-sensitive-files": "1.9.2",
-    "cypress": "3.0.1",
+    "cypress": "3.1.0",
     "dependency-check": "3.2.1",
     "deps-ok": "1.4.1",
     "git-issues": "1.3.1",
+    "lazy-ass": "1.6.0",
     "license-checker": "22.0.0",
     "mocha": "5.2.0",
+    "mocha-banner": "1.1.2",
     "nsp": "3.2.1",
     "pre-git": "3.17.1",
+    "prettier-standard": "8.0.1",
+    "ramda": "0.25.0",
+    "rimraf": "2.6.2",
     "semantic-release": "15.9.17",
     "simple-commit-message": "4.0.3",
-    "standard": "12.0.1"
+    "snap-shot-it": "6.1.10",
+    "standard": "12.0.1",
+    "stop-only": "2.2.4",
+    "terminal-banner": "1.1.0"
   },
   "standard": {
     "globals": [
@@ -90,9 +102,8 @@
     ]
   },
   "dependencies": {
-    "lodash.deburr": "4.1.0",
-    "lodash.kebabcase": "4.1.1",
-    "lodash.reject": "4.6.0"
+    "debug": "4.1.0",
+    "logdown": "3.2.7"
   },
   "release": {
     "analyzeCommits": "simple-commit-message"
