@@ -1,23 +1,28 @@
 /// <reference types="cypress" />
 'use strict'
 
+// ? why are we not using Cypress._ ?
 const kebabCase = require('lodash.kebabcase')
 const deburr = require('lodash.deburr')
 const reject = require('lodash.reject')
 const path = require('path')
 const util = require('util')
+const debug = require('debug')('cypress-failed-log')
 
 const cleanupFilename = s => kebabCase(deburr(s))
 const getFilepath = filename => path.join('cypress', 'logs', filename)
-const useSingleQuotes = s => Cypress._.replace(
-  Cypress._.replace(s, /'/g, "\\'"),
-  /"/g, "'"
-)
+const useSingleQuotes = s =>
+  Cypress._.replace(Cypress._.replace(s, /'/g, "\\'"), /"/g, "'")
 
 function writeFailedTestInfo ({
   specName,
-  title, suiteName, testName,
-  testError, testCommands, screenshot }) {
+  title,
+  suiteName,
+  testName,
+  testError,
+  testCommands,
+  screenshot
+}) {
   const info = {
     specName,
     title,
@@ -31,8 +36,9 @@ function writeFailedTestInfo ({
   const cleaned = cleanupFilename(testName)
   const filename = `failed-${cleaned}.json`
   const filepath = getFilepath(filename)
-  cy.writeFile(filepath, str)
-    .log('saved failed test information to %s', filepath)
+  cy
+    .writeFile(filepath, str)
+    .log(`saved failed test information to ${filename}`)
 
   // work around shell ENOENT failure in CI container
   // const runCmd = `npm run failed-test -- ${filename}`
@@ -81,37 +87,80 @@ function writeFailedTestInfo ({
   //   })
 }
 
+let savingCommands = false
 var loggedCommands = []
 
 const stringify = x => useSingleQuotes(JSON.stringify(util.inspect(x)))
 
 const isSimple = x =>
-  Cypress._.isString(x) ||
-  Cypress._.isNumber(x) ||
-  Cypress._.isPlainObject(x)
+  Cypress._.isString(x) || Cypress._.isNumber(x) || Cypress._.isPlainObject(x)
 
 function startLogging () {
   console.log('Will log Cypress commands')
 
-  // should we use command:start or command:end
-  // or combination of both to keep track?
-  // hmm, not every command seems to show up in command:end
-  Cypress.on('command:end', ({ attributes }) => {
-    const str = attributes.name + ' ' + attributes.args.map(stringify).join(' ')
+  const logCommand = options => {
+    debug('log command', options)
+    const { attributes } = options
+    const str =
+      options.options +
+      ' ' +
+      attributes.name +
+      ' ' +
+      attributes.args.map(stringify).join(' ')
 
     if (isSimple(attributes.subject)) {
       try {
         const s = stringify(attributes.subject)
-        loggedCommands.push(s + ' ' + str)
+        // loggedCommands.push({
+        //   id: attributes.chainerId,
+        //   message: s + ' ' + str
+        // })
       } catch (e) {
         // if subject is complex (like Window or circular element)
         // use just name and arguments
         console.error('could not convert subject', attributes.subject)
         console.error('for command', attributes)
-        loggedCommands.push(str)
+        // loggedCommands.push({
+        //   id: attributes.chainerId,
+        //   message: str
+        // })
       }
     } else {
-      loggedCommands.push(str)
+      // loggedCommands.push({
+      //   id: attributes.chainerId,
+      //   message: str
+      // })
+    }
+  }
+
+  // Cypress.on('command:start', logCommand)
+
+  Cypress.on('test:before:run', () => {
+    debug('before test run')
+    savingCommands = true
+  })
+
+  Cypress.on('test:after:run', () => {
+    debug('after test run')
+  })
+
+  // should we use command:start or command:end
+  // or combination of both to keep track?
+  // hmm, not every command seems to show up in command:end
+  Cypress.on('command:end', logCommand)
+
+  Cypress.on('log:added', options => {
+    if (!savingCommands) {
+      return
+    }
+    if (options.instrument === 'command' && options.consoleProps) {
+      const log = {
+        message: options.name + ' ' + options.message
+      }
+      console.log(log)
+      loggedCommands.push(log)
+      // console.log(stringify(options.consoleProps))
+      // cy.task('log', options.consoleProps, { log: false })
     }
   })
 }
@@ -124,13 +173,14 @@ function duplicate (s, k, collection) {
   if (k === 0) {
     return
   }
-  return s === collection[k - 1]
+  return s.id === collection[k - 1].id
 }
 
 // const describeCommand = c => `${c.name} ${c.message}`.trim()
 const notEmpty = c => c
 
 function onFailed () {
+  savingCommands = false
   if (this.currentTest.state === 'passed') {
     return
   }
@@ -144,13 +194,11 @@ function onFailed () {
 
   const title = this.currentTest.title
   const screenshotName = `${cleanupFilename(title)}-failed`
-  cy.wait(1000)
-    .log('waited for UI before capturing screenshot')
+  cy.wait(1000).log('waited for UI before capturing screenshot')
   cy.screenshot(screenshotName)
   cy.wait(1000)
 
-  const suiteName = this.currentTest.parent &&
-    this.currentTest.parent.title
+  const suiteName = this.currentTest.parent && this.currentTest.parent.title
 
   const testError = this.currentTest.err.message
 
@@ -159,7 +207,8 @@ function onFailed () {
   // sometimes the message is the same, since the log command events
   // repeat when state changes (command starts, runs, etc)
   // so filter and cleanup
-  const testCommands = reject(commands.filter(notEmpty), duplicate)
+  // const testCommands = reject(commands.filter(notEmpty), duplicate)
+  const testCommands = Cypress._.map(commands, 'message')
 
   const specName = path.basename(window.location.pathname)
 
@@ -209,7 +258,8 @@ function doneWithTest (testName) {
 }
 
 const _afterEach = afterEach
-afterEach = (name, fn) => { // eslint-disable-line
+afterEach = (name, fn) => {
+  // eslint-disable-line
   if (typeof name === 'function') {
     fn = name
     name = fn.name
