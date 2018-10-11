@@ -4,15 +4,11 @@
 // ? why are we not using Cypress._ ?
 const kebabCase = require('lodash.kebabcase')
 const deburr = require('lodash.deburr')
-const reject = require('lodash.reject')
 const path = require('path')
-const util = require('util')
 const debug = require('debug')('cypress-failed-log')
 
 const cleanupFilename = s => kebabCase(deburr(s))
 const getFilepath = filename => path.join('cypress', 'logs', filename)
-const useSingleQuotes = s =>
-  Cypress._.replace(Cypress._.replace(s, /'/g, "\\'"), /"/g, "'")
 
 function writeFailedTestInfo ({
   specName,
@@ -39,99 +35,48 @@ function writeFailedTestInfo ({
   cy
     .writeFile(filepath, str)
     .log(`saved failed test information to ${filename}`)
-
-  // work around shell ENOENT failure in CI container
-  // const runCmd = `npm run failed-test -- ${filename}`
-  // pass filename as environment variable
-
-  // try discovering the shell script filename
-  // const candidates = [
-  //   './node_modules/cypress-failed-log/on-failed.sh',
-  //   './on-failed.sh'
-  // ]
-  // const options = {
-  //   failOnNonZeroExit: false,
-  //   env: {
-  //     FAILED_FILENAME: filepath
-  //   }
-  // }
-
-  // function onFailedExec (result) {
-  //   console.log('running cy.exec has failed')
-  //   console.log(result)
-  //   cy.log(JSON.stringify(result))
-  //   const failedExecFilepath = getFilepath('failed-exec.json')
-  //   cy.writeFile(failedExecFilepath, JSON.stringify(result, null, 2))
-  // }
-
-  // cy.exec(candidates[0], options)
-  //   .then(result => {
-  //     if (result.code) {
-  //       onFailedExec(result)
-  //       return cy.exec(candidates[1], options)
-  //     } else {
-  //       console.log('ran npm command successfully', candidates[0])
-  //       return result
-  //     }
-  //   })
-  //   .then(result => {
-  //     if (result.code) {
-  //       onFailedExec(result)
-  //     }
-  //   })
-  //   // .log('ran "npm run failed-test" with the failed test filename', filepath)
-  //   .then(result => {
-  //     console.log('exec output')
-  //     console.log(result)
-  //     cy.log(result.stdout)
-  //   })
 }
 
 let savingCommands = false
-var loggedCommands = []
-
-const stringify = x => useSingleQuotes(JSON.stringify(util.inspect(x)))
-
-const isSimple = x =>
-  Cypress._.isString(x) || Cypress._.isNumber(x) || Cypress._.isPlainObject(x)
+let loggedCommands = []
 
 function startLogging () {
   console.log('Will log Cypress commands')
 
-  const logCommand = options => {
-    debug('log command', options)
-    const { attributes } = options
-    const str =
-      options.options +
-      ' ' +
-      attributes.name +
-      ' ' +
-      attributes.args.map(stringify).join(' ')
+  // const logCommand = options => {
+  //   debug('log command', options)
+  //   const { attributes } = options
+  //   const str =
+  //     options.options +
+  //     ' ' +
+  //     attributes.name +
+  //     ' ' +
+  //     attributes.args.map(stringify).join(' ')
 
-    if (isSimple(attributes.subject)) {
-      try {
-        const s = stringify(attributes.subject)
-        // loggedCommands.push({
-        //   id: attributes.chainerId,
-        //   message: s + ' ' + str
-        // })
-      } catch (e) {
-        // if subject is complex (like Window or circular element)
-        // use just name and arguments
-        console.error('could not convert subject', attributes.subject)
-        console.error('for command', attributes)
-        // loggedCommands.push({
-        //   id: attributes.chainerId,
-        //   message: str
-        // })
-      }
-    } else {
-      // loggedCommands.push({
-      //   id: attributes.chainerId,
-      //   message: str
-      // })
-    }
-  }
+  //   if (isSimple(attributes.subject)) {
+  //     try {
+  //       const s = stringify(attributes.subject)
+  //       // loggedCommands.push({
+  //       //   id: attributes.chainerId,
+  //       //   message: s + ' ' + str
+  //       // })
+  //     } catch (e) {
+  //       // if subject is complex (like Window or circular element)
+  //       // use just name and arguments
+  //       console.error('could not convert subject', attributes.subject)
+  //       console.error('for command', attributes)
+  //       // loggedCommands.push({
+  //       //   id: attributes.chainerId,
+  //       //   message: str
+  //       // })
+  //     }
+  //   } else {
+  //     // loggedCommands.push({
+  //     //   id: attributes.chainerId,
+  //     //   message: str
+  //     // })
+  //   }
+  // }
 
   // Cypress.on('command:start', logCommand)
 
@@ -140,14 +85,14 @@ function startLogging () {
     savingCommands = true
   })
 
-  Cypress.on('test:after:run', () => {
-    debug('after test run')
-  })
+  // Cypress.on('test:after:run', () => {
+  //   debug('after test run')
+  // })
 
   // should we use command:start or command:end
   // or combination of both to keep track?
   // hmm, not every command seems to show up in command:end
-  Cypress.on('command:end', logCommand)
+  // Cypress.on('command:end', logCommand)
 
   Cypress.on('log:added', options => {
     if (!savingCommands) {
@@ -169,15 +114,15 @@ function initLog () {
   loggedCommands = []
 }
 
-function duplicate (s, k, collection) {
-  if (k === 0) {
-    return
-  }
-  return s.id === collection[k - 1].id
-}
+// function duplicate (s, k, collection) {
+//   if (k === 0) {
+//     return
+//   }
+//   return s.id === collection[k - 1].id
+// }
 
 // const describeCommand = c => `${c.name} ${c.message}`.trim()
-const notEmpty = c => c
+// const notEmpty = c => c
 
 function onFailed () {
   savingCommands = false
@@ -258,6 +203,7 @@ function doneWithTest (testName) {
 }
 
 const _afterEach = afterEach
+/* eslint-disable-next-line no-global-assign */
 afterEach = (name, fn) => {
   // eslint-disable-line
   if (typeof name === 'function') {

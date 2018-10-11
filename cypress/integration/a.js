@@ -4,7 +4,7 @@ describe('root suite', () => {
       cy.wrap('foo').should('be.equal', 'foo')
     })
 
-    it.only('has second test (failing)', () => {
+    it('has second test (failing)', () => {
       cy.wrap({ foo: 42 }).its('foo').should('be.equal', 2)
     })
 
