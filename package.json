@@ -83,7 +83,7 @@
     "nsp": "3.2.1",
     "pre-git": "3.17.1",
     "prettier-standard": "8.0.1",
-    "ramda": "0.26.0",
+    "ramda": "0.26.1",
     "rimraf": "2.6.2",
     "semantic-release": "15.12.2",
     "snap-shot-it": "6.2.5",
