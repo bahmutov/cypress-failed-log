@@ -100,7 +100,7 @@
     ]
   },
   "dependencies": {
-    "debug": "4.1.0",
+    "debug": "4.1.1",
     "logdown": "3.2.7"
   }
 }
