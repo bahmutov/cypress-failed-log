@@ -84,7 +84,7 @@
     "pre-git": "3.17.1",
     "prettier-standard": "8.0.1",
     "ramda": "0.26.1",
-    "rimraf": "2.6.2",
+    "rimraf": "2.6.3",
     "semantic-release": "15.13.2",
     "snap-shot-it": "6.2.8",
     "standard": "12.0.1",
