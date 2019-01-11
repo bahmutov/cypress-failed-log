@@ -85,7 +85,7 @@
     "prettier-standard": "8.0.1",
     "ramda": "0.26.1",
     "rimraf": "2.6.3",
-    "semantic-release": "15.13.2",
+    "semantic-release": "15.13.3",
     "snap-shot-it": "6.2.8",
     "standard": "12.0.1",
     "stop-only": "2.2.5",
