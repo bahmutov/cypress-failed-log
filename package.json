@@ -82,7 +82,7 @@
     "mocha-banner": "1.1.2",
     "nsp": "3.2.1",
     "pre-git": "3.17.1",
-    "prettier-standard": "8.0.1",
+    "prettier-standard": "9.0.1",
     "ramda": "0.26.1",
     "rimraf": "2.6.3",
     "semantic-release": "15.13.3",
