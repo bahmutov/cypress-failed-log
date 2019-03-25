@@ -55,12 +55,12 @@ function startLogging () {
       return
     }
     if (options.instrument === 'command' && options.consoleProps) {
-      let detailMessage = '';
+      let detailMessage = ''
       if (options.name === 'xhr') {
         detailMessage = (options.consoleProps.Stubbed === 'Yes' ? 'STUBBED ' : '') + options.consoleProps.Method + ' ' + options.consoleProps.URL
       }
       const log = {
-        message: options.name + ' ' + options.message + ' ' + detailMessage
+        message: options.name + ' ' + options.message + (detailMessage !== '' ? ' ' + detailMessage : '')
       }
       debug(log)
       loggedCommands.push(log)
