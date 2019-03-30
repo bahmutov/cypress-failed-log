@@ -1,3 +1,16 @@
+exports['saved commands failed test in test-page2-spec'] = [
+  "visit test-page2.html",
+  "get #triggerXHR",
+  "click ",
+  "xhr  GET http://localhost:9999/test-page2.json",
+  "xhr  STUBBED GET http://localhost:9999/test-page3.json",
+  "log fail on purpose, no such text",
+  "wrap {foo: bar}",
+  "assert expected **{ foo: bar }** to deeply equal **{ foo: bar }**",
+  "contains this text does not exist",
+  "assert expected **{ Object (length, prevObject, ...) }** to be **visible**"
+]
+
 exports['saved commands failed test in test-page1-spec'] = [
   "visit test-page1.html",
   "log fail on purpose, no such text",
@@ -27,6 +40,14 @@ exports['spec a.js finished with'] = {
 }
 
 exports['spec test-page1-spec.js finished with'] = {
+  "totalTests": 1,
+  "totalFailed": 1,
+  "totalPassed": 0,
+  "totalPending": 0,
+  "totalSkipped": 0
+}
+
+exports['spec test-page2-spec.js finished with'] = {
   "totalTests": 1,
   "totalFailed": 1,
   "totalPassed": 0,

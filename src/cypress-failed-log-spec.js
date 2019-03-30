@@ -116,4 +116,55 @@ describe('cypress-failed-log', () => {
         )
       })
   })
+
+  it('runs spec test-page2-spec', () => {
+    const spec = 'cypress/integration/test-page2-spec.js'
+    terminalBanner(`Starting spec ${spec} at ${new Date()}`, '*')
+
+    return cypress
+      .run({
+        spec
+      })
+      .tap(() => {
+        terminalBanner(
+          `Cypress run finished for: ${spec} at ${new Date()}`,
+          '*'
+        )
+      })
+      .then(
+        pick([
+          'totalTests',
+          'totalFailed',
+          'totalPassed',
+          'totalPending',
+          'totalSkipped'
+        ])
+      )
+      .then(tests => {
+        debug('finished tests stats for test-page2-spec %o', tests)
+        snapshot('spec test-page2-spec.js finished with', tests)
+      })
+      .then(() => {
+        const logFilename = join(
+          __dirname,
+          '..',
+          'cypress',
+          'logs',
+          'failed-cypress-failed-log-finds-xhr.json'
+        )
+        la(existsSync(logFilename), 'cannot find file', logFilename)
+        const saved = require(logFilename)
+        saved.testCommands = saved.testCommands.map((command) => {
+          if (command.substring(0, 3) === 'xhr') {
+            return command.replace(/localhost:[0-9]+/, 'localhost:9999')
+          } else {
+            return command
+          }
+        })
+        snapshot(
+          'saved commands failed test in test-page2-spec',
+          saved.testCommands
+        )
+      })
+  })
 })
