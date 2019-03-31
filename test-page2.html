@@ -1,0 +1,14 @@
+<script type="text/javascript">
+    function triggerXHR() {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', 'test-page2.json', true);
+        xhr.send(null);
+        xhr = new XMLHttpRequest();
+        xhr.open('GET', 'test-page3.json', true);
+        xhr.send(null);
+    }
+</script>
+
+<body>
+    <button id="triggerXHR" onClick="triggerXHR()">Trigger XHR</button>
+</body>
