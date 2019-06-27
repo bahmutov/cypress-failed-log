@@ -14,7 +14,6 @@
       ],
       "pre-push": [
         "npm run stop-only",
-        "npm run secure",
         "npm run license",
         "npm run ban -- --all",
         "npm run size"
@@ -55,7 +54,6 @@
     "license": "license-checker --production --onlyunknown --csv",
     "lint": "standard --verbose --fix src/*.js test/*.js",
     "pretest": "npm run lint",
-    "secure": "nsp check",
     "size": "t=\"$(npm pack .)\"; wc -c \"${t}\"; tar tvf \"${t}\"; rm \"${t}\";",
     "test": "npm run unit",
     "unit": "mocha --timeout 180000 src/*-spec.js",
@@ -80,7 +78,6 @@
     "license-checker": "25.0.1",
     "mocha": "6.1.4",
     "mocha-banner": "1.1.2",
-    "nsp": "3.2.1",
     "pre-git": "3.17.1",
     "prettier-standard": "9.1.1",
     "ramda": "0.26.1",
