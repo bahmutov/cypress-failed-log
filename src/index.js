@@ -165,8 +165,9 @@ afterEach = (name, fn) => {
   // before running the client function "fn"
   // run our "onFailed" to capture the screenshot sooner
   _afterEach(name, function () {
+    // run callbacks with context "this"
     onFailed.call(this)
-    fn()
+    fn.call(this)
   })
 }
 
