@@ -71,7 +71,7 @@
     "@types/ramda": "0.26.15",
     "ban-sensitive-files": "1.9.2",
     "cypress": "3.3.2",
-    "dependency-check": "3.3.0",
+    "dependency-check": "3.4.1",
     "deps-ok": "1.4.1",
     "git-issues": "1.3.1",
     "lazy-ass": "1.6.0",
