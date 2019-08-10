@@ -68,7 +68,7 @@
     "stop-only": "stop-only -f src"
   },
   "devDependencies": {
-    "@types/ramda": "0.26.15",
+    "@types/ramda": "0.26.19",
     "ban-sensitive-files": "1.9.2",
     "cypress": "3.3.2",
     "dependency-check": "3.3.0",
