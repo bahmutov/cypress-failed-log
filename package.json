@@ -83,7 +83,7 @@
     "ramda": "0.26.1",
     "rimraf": "3.0.0",
     "semantic-release": "15.13.24",
-    "snap-shot-it": "7.8.0",
+    "snap-shot-it": "7.8.1",
     "standard": "14.3.1",
     "stop-only": "3.1.0",
     "terminal-banner": "1.1.0"
