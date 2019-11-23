@@ -2,6 +2,10 @@ language: node_js
 cache:
   directories:
     - node_modules
+    # cache NPM modules
+    - ~/.npm
+    # cache Cypress binary
+    - ~/.cache
 notifications:
   email: true
 node_js:
@@ -12,12 +16,6 @@ addons:
       # Ubuntu 16+ does not install this dependency by default,
       # so we need to install it ourselves
       - libgconf-2-4
-cache:
-  directories:
-    # cache NPM modules
-    - ~/.npm
-    # cache Cypress binary
-    - ~/.cache
 before_script:
   - npm ci
 script:
