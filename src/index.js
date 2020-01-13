@@ -4,13 +4,20 @@
 const path = require('path')
 const debug = require('debug')('cypress-failed-log')
 
+const maxFileNameLength = 220
 const cleanupFilename = s => Cypress._.kebabCase(Cypress._.deburr(s))
+const truncateFilename = s => Cypress._.truncate(s, {
+  length: maxFileNameLength,
+  omission: ''
+})
+const getCleanFilename = s => truncateFilename(cleanupFilename(s))
 const getFilepath = filename => path.join('cypress', 'logs', filename)
 
 function writeFailedTestInfo ({
   specName,
   title,
   suiteName,
+  testId,
   testName,
   testError,
   testCommands,
@@ -20,13 +27,19 @@ function writeFailedTestInfo ({
     specName,
     title,
     suiteName,
+    testId,
     testName,
     testError,
     testCommands,
     screenshot
   }
   const str = JSON.stringify(info, null, 2) + '\n'
-  const cleaned = cleanupFilename(testName)
+  const cleaned = getCleanFilename(
+    Cypress._.join([
+      Cypress._.split(specName, '.')[0],
+      testId,
+      testName
+    ], '-'))
   const filename = `failed-${cleaned}.json`
   const filepath = getFilepath(filename)
   cy
@@ -77,7 +90,9 @@ function onFailed () {
   if (this.currentTest.state === 'passed') {
     return
   }
+
   const testName = this.currentTest.fullTitle()
+  const testId = this.currentTest.id
   // prevents processing failed test twice - from our "afterEach" callback
   // and from wrapping user "afterEach"
   if (hasSeen(testName)) {
@@ -86,7 +101,8 @@ function onFailed () {
   doneWithTest(testName)
 
   const title = this.currentTest.title
-  const screenshotName = `${cleanupFilename(title)}-failed`
+  const screenshotName = `${getCleanFilename(title)} (failed)`
+
   cy.wait(1000).log('waited for UI before capturing screenshot')
   cy.screenshot(screenshotName)
   cy.wait(1000)
@@ -126,6 +142,7 @@ function onFailed () {
     specName,
     title,
     suiteName,
+    testId,
     testName,
     testError,
     testCommands,

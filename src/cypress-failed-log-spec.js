@@ -5,12 +5,55 @@ require('mocha-banner').register()
 const la = require('lazy-ass')
 const cypress = require('cypress')
 const snapshot = require('snap-shot-it')
-const { pick } = require('ramda')
 const { existsSync } = require('fs')
 const { join } = require('path')
 const rimraf = require('rimraf')
 const debug = require('debug')('test')
 const { terminalBanner } = require('terminal-banner')
+const _ = require('lodash')
+
+function getFilename (specName, testId, title) {
+  function getCleanTestTitle (specName, testId, title) {
+    const result = _
+      .chain([_.split(specName, '.')[0], testId, _.join(title, '-')])
+      .join('-')
+      .deburr()
+      .kebabCase()
+      .truncate({
+        length: 220,
+        omission: ''
+      })
+      .value()
+
+    return `failed-${result}.json`
+  }
+
+  const fileName = getCleanTestTitle(specName, testId, title)
+  return join(__dirname, '..', 'cypress', 'logs', fileName)
+}
+
+function checkStats (tests) {
+  const {
+    totalTests,
+    totalFailed,
+    totalPassed,
+    totalPending,
+    totalSkipped,
+    runs: [
+      { spec: { name } }
+    ]
+  } = tests
+  const logObj = {
+    totalTests,
+    totalFailed,
+    totalPassed,
+    totalPending,
+    totalSkipped
+  }
+  debug('finished tests stats %o', logObj)
+  snapshot(`spec ${name} finished with`, logObj)
+  return tests
+}
 
 /* global describe, it */
 describe('cypress-failed-log', () => {
@@ -34,42 +77,17 @@ describe('cypress-failed-log', () => {
           '*'
         )
       })
-      .then(
-        pick([
-          'totalTests',
-          'totalFailed',
-          'totalPassed',
-          'totalPending',
-          'totalSkipped'
-        ])
-      )
-      .then(tests => {
-        debug('finished tests stats %o', tests)
-        snapshot('spec a.js finished with', tests)
-      })
-      .then(() => {
-        const logFilename = join(
-          __dirname,
-          '..',
-          'cypress',
-          'logs',
-          'failed-root-suite-first-context-has-second-test-failing.json'
-        )
-        la(existsSync(logFilename), 'cannot find file', logFilename)
-        const saved = require(logFilename)
-        snapshot('saved commands from second test', saved.testCommands)
-      })
-      .then(() => {
-        const logFilename = join(
-          __dirname,
-          '..',
-          'cypress',
-          'logs',
-          'failed-root-suite-first-context-has-third-test-failing.json'
-        )
-        la(existsSync(logFilename), 'cannot find file', logFilename)
-        const saved = require(logFilename)
-        snapshot('saved commands from third test', saved.testCommands)
+      .then(checkStats)
+      .then(({ runs }) => {
+        const { spec: { name }, tests } = runs[0]
+        for (const { testId, title, state } of tests) {
+          if (state === 'failed') {
+            const filename = getFilename(name, testId, title)
+            la(existsSync(filename), 'cannot find file', filename)
+            const saved = require(filename)
+            snapshot(`saved commands from ${name} ${_.last(title)}`, saved.testCommands)
+          }
+        }
       })
   })
 
@@ -87,33 +105,17 @@ describe('cypress-failed-log', () => {
           '*'
         )
       })
-      .then(
-        pick([
-          'totalTests',
-          'totalFailed',
-          'totalPassed',
-          'totalPending',
-          'totalSkipped'
-        ])
-      )
-      .then(tests => {
-        debug('finished tests stats for test-page1-spec %o', tests)
-        snapshot('spec test-page1-spec.js finished with', tests)
-      })
-      .then(() => {
-        const logFilename = join(
-          __dirname,
-          '..',
-          'cypress',
-          'logs',
-          'failed-cypress-failed-log-finds-aliens.json'
-        )
-        la(existsSync(logFilename), 'cannot find file', logFilename)
-        const saved = require(logFilename)
-        snapshot(
-          'saved commands failed test in test-page1-spec',
-          saved.testCommands
-        )
+      .then(checkStats)
+      .then(({ runs }) => {
+        const { spec: { name }, tests } = runs[0]
+        for (const { testId, title, state } of tests) {
+          if (state === 'failed') {
+            const filename = getFilename(name, testId, title)
+            la(existsSync(filename), 'cannot find file', filename)
+            const saved = require(filename)
+            snapshot(`saved commands from ${name} ${_.last(title)}`, saved.testCommands)
+          }
+        }
       })
   })
 
@@ -131,29 +133,14 @@ describe('cypress-failed-log', () => {
           '*'
         )
       })
-      .then(
-        pick([
-          'totalTests',
-          'totalFailed',
-          'totalPassed',
-          'totalPending',
-          'totalSkipped'
-        ])
-      )
-      .then(tests => {
-        debug('finished tests stats for test-page2-spec %o', tests)
-        snapshot('spec test-page2-spec.js finished with', tests)
-      })
-      .then(() => {
-        const logFilename = join(
-          __dirname,
-          '..',
-          'cypress',
-          'logs',
-          'failed-cypress-failed-log-finds-xhr.json'
-        )
-        la(existsSync(logFilename), 'cannot find file', logFilename)
-        const saved = require(logFilename)
+      .then(checkStats)
+      .then(({ runs }) => {
+        const { spec: { name }, tests } = runs[0]
+        const { testId, title } = tests[0]
+
+        const filename = getFilename(name, testId, title)
+        la(existsSync(filename), 'cannot find file', filename)
+        const saved = require(filename)
         saved.testCommands = saved.testCommands.map((command) => {
           if (command.substring(0, 3) === 'xhr') {
             return command.replace(/localhost:[0-9]+/, 'localhost:9999')
@@ -161,10 +148,35 @@ describe('cypress-failed-log', () => {
             return command
           }
         })
-        snapshot(
-          'saved commands failed test in test-page2-spec',
-          saved.testCommands
+        snapshot(`saved commands from ${name} ${_.last(title)}`, saved.testCommands)
+      })
+  })
+
+  it('runs spec long-name-spec', () => {
+    const spec = 'cypress/integration/long-name-spec.js'
+    terminalBanner(`Starting spec ${spec} at ${new Date()}`, '*')
+
+    return cypress
+      .run({
+        spec
+      })
+      .tap(() => {
+        terminalBanner(
+          `Cypress run finished for: ${spec} at ${new Date()}`,
+          '*'
         )
+      })
+      .then(checkStats)
+      .then(({ runs }) => {
+        const { spec: { name }, tests } = runs[0]
+        for (const { testId, title, state } of tests) {
+          if (state === 'failed') {
+            const filename = getFilename(name, testId, title)
+            la(existsSync(filename), 'cannot find file', filename)
+            const saved = require(filename)
+            snapshot(`saved commands from ${name} ${_.last(title)}`, saved.testCommands)
+          }
+        }
       })
   })
 })

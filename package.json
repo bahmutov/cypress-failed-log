@@ -68,7 +68,6 @@
     "stop-only": "stop-only -f src"
   },
   "devDependencies": {
-    "@types/ramda": "0.26.29",
     "ban-sensitive-files": "1.9.2",
     "cypress": "3.4.1",
     "dependency-check": "4.1.0",
@@ -76,11 +75,11 @@
     "git-issues": "1.3.1",
     "lazy-ass": "1.6.0",
     "license-checker": "25.0.1",
+    "lodash": "4.17.15",
     "mocha": "6.2.1",
     "mocha-banner": "1.1.2",
     "pre-git": "3.17.1",
     "prettier-standard": "15.0.1",
-    "ramda": "0.26.1",
     "rimraf": "3.0.0",
     "semantic-release": "15.13.24",
     "snap-shot-it": "7.8.1",
