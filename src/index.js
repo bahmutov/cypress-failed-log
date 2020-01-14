@@ -5,7 +5,10 @@ const path = require('path')
 const debug = require('debug')('cypress-failed-log')
 
 const cleanupFilename = s => Cypress._.kebabCase(Cypress._.deburr(s))
-const getFilepath = filename => path.join('cypress', 'logs', filename)
+const getFilepath = filename =>
+  Cypress.env('logFolder')
+    ? path.join(Cypress.env('logFolder'))
+    : path.join('cypress', 'logs', filename);
 
 function writeFailedTestInfo ({
   specName,
