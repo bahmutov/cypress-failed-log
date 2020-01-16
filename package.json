@@ -49,7 +49,7 @@
   },
   "scripts": {
     "ban": "ban",
-    "deps": "deps-ok && dependency-check .",
+    "deps": "deps-ok && dependency-check . --unused --no-dev --ignore-module logdown",
     "issues": "git-issues",
     "license": "license-checker --production --onlyunknown --csv",
     "lint": "standard --verbose --fix src/*.js test/*.js",
