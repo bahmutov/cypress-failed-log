@@ -9,7 +9,7 @@ cache:
 notifications:
   email: true
 node_js:
-  - '10'
+  - '12'
 addons:
   apt:
     packages:
