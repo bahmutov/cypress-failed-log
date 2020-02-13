@@ -97,6 +97,6 @@
   },
   "dependencies": {
     "debug": "4.1.1",
-    "logdown": "3.2.8"
+    "logdown": "3.3.0"
   }
 }
