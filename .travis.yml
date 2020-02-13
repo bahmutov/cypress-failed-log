@@ -1,7 +1,6 @@
 language: node_js
 cache:
   directories:
-    - node_modules
     # cache NPM modules
     - ~/.npm
     # cache Cypress binary
@@ -18,6 +17,7 @@ addons:
       - libgconf-2-4
 before_script:
   - npm ci
+  - npx cypress verify
 script:
   - npm test
   # - npm run clean
