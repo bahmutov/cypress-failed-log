@@ -1,7 +1,6 @@
 language: node_js
 cache:
   directories:
-    - node_modules
     # cache NPM modules
     - ~/.npm
     # cache Cypress binary
