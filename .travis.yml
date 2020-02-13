@@ -17,6 +17,7 @@ addons:
       - libgconf-2-4
 before_script:
   - npm ci
+  - npx cypress verify
 script:
   - npm test
   # - npm run clean
