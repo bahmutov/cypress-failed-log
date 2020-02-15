@@ -79,7 +79,7 @@
     "mocha": "7.0.1",
     "mocha-banner": "1.1.2",
     "pre-git": "3.17.1",
-    "prettier-standard": "15.0.1",
+    "prettier-standard": "16.1.0",
     "rimraf": "3.0.2",
     "semantic-release": "15.13.24",
     "snap-shot-it": "7.9.2",
