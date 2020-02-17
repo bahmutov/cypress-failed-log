@@ -98,5 +98,8 @@
   "dependencies": {
     "debug": "4.1.1",
     "logdown": "3.3.0"
+  },
+  "release": {
+    "analyzeCommits": "simple-commit-message"
   }
 }

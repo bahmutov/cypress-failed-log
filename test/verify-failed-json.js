@@ -12,11 +12,6 @@ const jsonFiles = [
   'failed-cypress-failed-log-finds-aliens.json'
 ]
 
-const cypress = require(inParentFolder('cypress.json'))
-const screenshotsFolder = inParentFolder(
-  cypress.screenshotsFolder || 'cypress/screenshots')
-console.log('screenshots in folder', screenshotsFolder)
-
 const logsFolder = inParentFolder('cypress/logs')
 console.log('logs in folder', logsFolder)
 
@@ -43,12 +38,6 @@ function checkJsonFile (filename) {
 
   la(result.testCommands[0].startsWith('visit'),
     'expected first command to be visit', result.testCommands)
-
-  const screenshot = result.screenshot
-  la(is.unemptyString(screenshot), 'could not find screenshot', result)
-  const screenshotFilename = path.join(screenshotsFolder, screenshot)
-  la(fs.existsSync(screenshotFilename),
-    'could not find screenshot image', screenshotFilename)
 
   console.log('file %s looks ok', jsonFilename)
 }

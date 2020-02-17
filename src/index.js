@@ -20,8 +20,7 @@ function writeFailedTestInfo ({
   testId,
   testName,
   testError,
-  testCommands,
-  screenshot
+  testCommands
 }) {
   const info = {
     specName,
@@ -30,8 +29,7 @@ function writeFailedTestInfo ({
     testId,
     testName,
     testError,
-    testCommands,
-    screenshot
+    testCommands
   }
   const str = JSON.stringify(info, null, 2) + '\n'
   const cleaned = getCleanFilename(
@@ -101,11 +99,6 @@ function onFailed () {
   doneWithTest(testName)
 
   const title = this.currentTest.title
-  const screenshotName = `${getCleanFilename(title)} (failed)`
-
-  cy.wait(1000).log('waited for UI before capturing screenshot')
-  cy.screenshot(screenshotName)
-  cy.wait(1000)
 
   const suiteName = this.currentTest.parent && this.currentTest.parent.title
 
@@ -121,8 +114,6 @@ function onFailed () {
 
   const specName = path.basename(window.location.pathname)
 
-  const screenshot = `${screenshotName}.png`
-
   console.log('=== test failed ===')
   console.log(specName)
   console.log('=== title ===')
@@ -135,8 +126,6 @@ function onFailed () {
   console.log(testError)
   console.log('=== commands ===')
   console.log(testCommands.join('\n'))
-  console.log('=== screenshot ===')
-  console.log(screenshot)
 
   const info = {
     specName,
@@ -145,8 +134,7 @@ function onFailed () {
     testId,
     testName,
     testError,
-    testCommands,
-    screenshot
+    testCommands
   }
   writeFailedTestInfo(info)
 
@@ -154,10 +142,9 @@ function onFailed () {
 }
 
 //   We have to do a hack to make sure OUR "afterEach" callback function
-// runs BEFORE any user supplied "afterEach" callback. This is necessary
-// to take screenshot of the failure AS SOON AS POSSIBLE.
-//   Otherwise commands executed by the user callback might destroys the
-// screen and add too many commands to the log, making post-mortem
+// runs BEFORE any user supplied "afterEach" callback.
+//   Otherwise commands executed by the user callback might
+// add too many commands to the log, making post-mortem
 // triage very difficult. In this case we just wrap client supplied
 // "afterEach" function with our callback "onFailed". This ensures we run
 // first.
@@ -179,8 +166,7 @@ afterEach = (name, fn) => {
     fn = name
     name = fn.name
   }
-  // before running the client function "fn"
-  // run our "onFailed" to capture the screenshot sooner
+  // run our "onFailed" before running the client function "fn"
   _afterEach(name, function () {
     // run callbacks with context "this"
     onFailed.call(this)
