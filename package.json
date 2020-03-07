@@ -68,7 +68,7 @@
     "stop-only": "stop-only -f src"
   },
   "devDependencies": {
-    "ban-sensitive-files": "1.9.3",
+    "ban-sensitive-files": "1.9.4",
     "cypress": "4.1.0",
     "dependency-check": "4.1.0",
     "deps-ok": "1.4.1",
