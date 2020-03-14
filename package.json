@@ -82,7 +82,7 @@
     "prettier-standard": "16.2.1",
     "rimraf": "3.0.2",
     "semantic-release": "17.0.4",
-    "snap-shot-it": "7.9.2",
+    "snap-shot-it": "7.9.3",
     "standard": "14.3.1",
     "stop-only": "3.1.0",
     "terminal-banner": "1.1.0"
