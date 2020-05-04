@@ -4,24 +4,6 @@
   "version": "0.0.0-development",
   "author": "Gleb Bahmutov <gleb.bahmutov@gmail.com>",
   "bugs": "https://github.com/bahmutov/cypress-failed-log/issues",
-  "config": {
-    "pre-git": {
-      "pre-commit": [
-        "npm prune",
-        "npm run deps",
-        "npm test",
-        "npm run ban"
-      ],
-      "pre-push": [
-        "npm run stop-only",
-        "npm run license",
-        "npm run ban -- --all",
-        "npm run size"
-      ],
-      "post-commit": [],
-      "post-merge": []
-    }
-  },
   "engines": {
     "node": ">=6"
   },
@@ -78,7 +60,6 @@
     "lodash": "4.17.15",
     "mocha": "7.1.2",
     "mocha-banner": "1.1.2",
-    "pre-git": "3.17.1",
     "prettier-standard": "16.3.0",
     "rimraf": "3.0.2",
     "semantic-release": "17.0.7",

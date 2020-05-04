@@ -5,7 +5,7 @@ describe('cypress failed log', () => {
 
   afterEach(function makeDummyCommands () {
     // more dummy commands on purpose. Can we get
-    // the right screenshot when the test actual failed?
+    // the right command list when the actual test failed?
     cy
       .wait(100)
       .wait(100)
