@@ -35,7 +35,7 @@ exports['saved commands from long-name-spec.js 184-188-192-196-2001'] = [
   "log file name short enough",
   "visit https://example.cypress.io",
   "url ",
-  "assert expected **https://example.cypress.io** to include **google**"
+  "assert expected **https://example.cypress.io/** to include **google**"
 ]
 
 exports['saved commands from long-name-spec.js 184-188-192-196-200-204-208-212-216-220-224-228-232-236-240-244-248-252-2561'] = [
