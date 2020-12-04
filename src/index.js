@@ -43,6 +43,8 @@ function writeFailedTestInfo ({
   cy
     .writeFile(filepath, str)
     .log(`saved failed test information to ${filename}`)
+
+  return filepath
 }
 
 let savingCommands = false
@@ -136,7 +138,8 @@ function onFailed () {
     testError,
     testCommands
   }
-  writeFailedTestInfo(info)
+  const filepath = writeFailedTestInfo(info)
+  info.filepath = filepath
 
   cy.task('failed', info, { log: false })
 }

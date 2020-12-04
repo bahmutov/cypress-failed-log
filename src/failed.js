@@ -12,5 +12,8 @@ module.exports = () => info => {
     .map(replaceStarStart)
     .map(formatMarkdown)
   console.log(formattedCommands.join('\n'))
+  if (info.filepath) {
+    console.log('saved as log in: %s', info.filepath)
+  }
   return null
 }
