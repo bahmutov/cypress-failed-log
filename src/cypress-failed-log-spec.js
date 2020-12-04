@@ -152,7 +152,7 @@ describe('cypress-failed-log', () => {
       })
   })
 
-  it('runs spec long-name-spec', () => {
+  it.only('runs spec long-name-spec', () => {
     const spec = 'cypress/integration/long-name-spec.js'
     terminalBanner(`Starting spec ${spec} at ${new Date()}`, '*')
 
@@ -173,6 +173,7 @@ describe('cypress-failed-log', () => {
           if (state === 'failed') {
             const filename = getFilename(name, testId, title)
             la(existsSync(filename), 'cannot find file', filename)
+            console.log('loading saved output from %s', filename)
             const saved = require(filename)
             snapshot(`saved commands from ${name} ${_.last(title)}`, saved.testCommands)
           }
