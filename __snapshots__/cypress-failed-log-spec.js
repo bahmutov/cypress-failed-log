@@ -45,9 +45,9 @@ exports['saved commands from long-name-spec.js 184-188-192-196-200-204-208-212-2
 ]
 
 exports['spec a.js finished with'] = {
-  "totalTests": 3,
+  "totalTests": 4,
   "totalFailed": 2,
-  "totalPassed": 1,
+  "totalPassed": 2,
   "totalPending": 0,
   "totalSkipped": 0
 }
