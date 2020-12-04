@@ -12,10 +12,13 @@ const debug = require('debug')('test')
 const { terminalBanner } = require('terminal-banner')
 const _ = require('lodash')
 
-function getFilename (specName, testId, title) {
-  function getCleanTestTitle (specName, testId, title) {
+function getFilename (specName, title) {
+  la(specName, 'missing spec name', specName)
+  la(title, 'missing test title', title)
+
+  function getCleanTestTitle (specName, title) {
     const result = _
-      .chain([_.split(specName, '.')[0], testId, _.join(title, '-')])
+      .chain([_.split(specName, '.')[0], _.join(title, '-')])
       .join('-')
       .deburr()
       .kebabCase()
@@ -28,7 +31,7 @@ function getFilename (specName, testId, title) {
     return `failed-${result}.json`
   }
 
-  const fileName = getCleanTestTitle(specName, testId, title)
+  const fileName = getCleanTestTitle(specName, title)
   return join(__dirname, '..', 'cypress', 'logs', fileName)
 }
 
@@ -80,10 +83,14 @@ describe('cypress-failed-log', () => {
       .then(checkStats)
       .then(({ runs }) => {
         const { spec: { name }, tests } = runs[0]
-        for (const { testId, title, state } of tests) {
+        for (const testInfo of tests) {
+          debug('test info %o', testInfo)
+          const { title, state } = testInfo
+
           if (state === 'failed') {
-            const filename = getFilename(name, testId, title)
+            const filename = getFilename(name, title)
             la(existsSync(filename), 'cannot find file', filename)
+
             const saved = require(filename)
             snapshot(`saved commands from ${name} ${_.last(title)}`, saved.testCommands)
           }
@@ -108,9 +115,9 @@ describe('cypress-failed-log', () => {
       .then(checkStats)
       .then(({ runs }) => {
         const { spec: { name }, tests } = runs[0]
-        for (const { testId, title, state } of tests) {
+        for (const { title, state } of tests) {
           if (state === 'failed') {
-            const filename = getFilename(name, testId, title)
+            const filename = getFilename(name, title)
             la(existsSync(filename), 'cannot find file', filename)
             const saved = require(filename)
             snapshot(`saved commands from ${name} ${_.last(title)}`, saved.testCommands)
@@ -136,9 +143,9 @@ describe('cypress-failed-log', () => {
       .then(checkStats)
       .then(({ runs }) => {
         const { spec: { name }, tests } = runs[0]
-        const { testId, title } = tests[0]
+        const { title } = tests[0]
 
-        const filename = getFilename(name, testId, title)
+        const filename = getFilename(name, title)
         la(existsSync(filename), 'cannot find file', filename)
         const saved = require(filename)
         saved.testCommands = saved.testCommands.map((command) => {
@@ -169,9 +176,9 @@ describe('cypress-failed-log', () => {
       .then(checkStats)
       .then(({ runs }) => {
         const { spec: { name }, tests } = runs[0]
-        for (const { testId, title, state } of tests) {
+        for (const { title, state } of tests) {
           if (state === 'failed') {
-            const filename = getFilename(name, testId, title)
+            const filename = getFilename(name, title)
             la(existsSync(filename), 'cannot find file', filename)
 
             console.log('loading saved output from %s', filename)

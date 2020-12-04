@@ -8,7 +8,7 @@ exports['saved commands from test-page2-spec.js finds xhr'] = [
   "wrap {foo: bar}",
   "assert expected **{ foo: bar }** to deeply equal **{ foo: bar }**",
   "contains this text does not exist",
-  "assert expected **{ Object (length, prevObject, ...) }** to be **visible**"
+  "assert expected **:not(script,style):cy-contains('this text does not exist'), [type='submit'][value~='this text does not exist']** to be **visible**"
 ]
 
 exports['saved commands from test-page1-spec.js finds aliens'] = [
@@ -17,7 +17,7 @@ exports['saved commands from test-page1-spec.js finds aliens'] = [
   "wrap {foo: bar}",
   "assert expected **{ foo: bar }** to deeply equal **{ foo: bar }**",
   "contains this text does not exist",
-  "assert expected **{ Object (length, prevObject, ...) }** to be **visible**"
+  "assert expected **:not(script,style):cy-contains('this text does not exist'), [type='submit'][value~='this text does not exist']** to be **visible**"
 ]
 
 exports['saved commands from a.js has second test (failing)'] = [
@@ -43,7 +43,6 @@ exports['saved commands from long-name-spec.js 184-188-192-196-200-204-208-212-2
   "get .nonexistent-selector",
   "assert expected **.nonexistent-selector** to exist in the DOM"
 ]
-
 
 exports['spec a.js finished with'] = {
   "totalTests": 3,

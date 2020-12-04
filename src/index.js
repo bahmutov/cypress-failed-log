@@ -1,4 +1,5 @@
 /// <reference types="cypress" />
+// @ts-check
 'use strict'
 
 const path = require('path')
@@ -17,7 +18,6 @@ function writeFailedTestInfo ({
   specName,
   title,
   suiteName,
-  testId,
   testName,
   testError,
   testCommands
@@ -26,7 +26,6 @@ function writeFailedTestInfo ({
     specName,
     title,
     suiteName,
-    testId,
     testName,
     testError,
     testCommands
@@ -35,7 +34,6 @@ function writeFailedTestInfo ({
   const cleaned = getCleanFilename(
     Cypress._.join([
       Cypress._.split(specName, '.')[0],
-      testId,
       testName
     ], '-'))
   const filename = `failed-${cleaned}.json`
@@ -92,7 +90,6 @@ function onFailed () {
   }
 
   const testName = this.currentTest.fullTitle()
-  const testId = this.currentTest.id
   // prevents processing failed test twice - from our "afterEach" callback
   // and from wrapping user "afterEach"
   if (hasSeen(testName)) {
@@ -133,7 +130,6 @@ function onFailed () {
     specName,
     title,
     suiteName,
-    testId,
     testName,
     testError,
     testCommands
