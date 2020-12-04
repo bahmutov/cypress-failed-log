@@ -49,7 +49,7 @@ title - the name of the test
 suiteName - the parent suite name
 testName - full name of the test, including the suite name
 testError - error message string
-testCommands - array of strings, last failing command is last
+testCommands - array of strings, the last failing command is the last item
 ```
 
 ## Example
