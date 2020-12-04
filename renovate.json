@@ -9,5 +9,18 @@
   "schedule": [
     "every weekend"
   ],
-  "masterIssue": true
+  "masterIssue": true,
+  "packageRules": [
+    {
+      "packagePatterns": [
+        "*"
+      ],
+      "excludePackagePatterns": [
+        "debug",
+        "logdown",
+        "cypress"
+      ],
+      "enabled": false
+    }
+  ]
 }
