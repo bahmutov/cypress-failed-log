@@ -4,7 +4,7 @@
 
 [![NPM][npm-icon] ][npm-url]
 
-[![Build status][ci-image] ][ci-url]
+[![ci status][ci image]][ci url]
 [![semantic-release][semantic-image] ][semantic-url]
 [![js-standard-style][standard-image]][standard-url]
 [![renovate-app badge][renovate-badge]][renovate-app]
@@ -122,11 +122,12 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 [npm-icon]: https://nodei.co/npm/cypress-failed-log.svg?downloads=true
 [npm-url]: https://npmjs.org/package/cypress-failed-log
-[ci-image]: https://travis-ci.com/bahmutov/cypress-failed-log.svg?branch=master
-[ci-url]: https://travis-ci.com/bahmutov/cypress-failed-log
 [semantic-image]: https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg
 [semantic-url]: https://github.com/semantic-release/semantic-release
 [standard-image]: https://img.shields.io/badge/code%20style-standard-brightgreen.svg
 [standard-url]: http://standardjs.com/
 [renovate-badge]: https://img.shields.io/badge/renovate-app-blue.svg
 [renovate-app]: https://renovateapp.com/
+
+[ci image]: https://github.com/bahmutov/cypress-failed-log/workflows/ci/badge.svg?branch=master
+[ci url]: https://github.com/bahmutov/cypress-failed-log/actions
