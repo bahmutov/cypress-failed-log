@@ -18,7 +18,8 @@
       "excludePackagePatterns": [
         "debug",
         "logdown",
-        "cypress"
+        "cypress",
+        "semantic-release"
       ],
       "enabled": false
     }
