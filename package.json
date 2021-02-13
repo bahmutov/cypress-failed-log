@@ -62,7 +62,7 @@
     "mocha-banner": "1.1.2",
     "prettier-standard": "16.3.0",
     "rimraf": "3.0.2",
-    "semantic-release": "17.3.0",
+    "semantic-release": "17.3.9",
     "snap-shot-it": "7.9.3",
     "standard": "14.3.3",
     "stop-only": "3.1.0",
