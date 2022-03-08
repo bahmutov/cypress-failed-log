@@ -5,6 +5,11 @@
 const path = require('path')
 const debug = require('debug')('cypress-failed-log')
 
+// check built-in module against missing methods
+if (typeof path.basename !== 'function') {
+  throw new Error('path.basename should be a function')
+}
+
 const maxFileNameLength = 220
 const cleanupFilename = s => Cypress._.kebabCase(Cypress._.deburr(s))
 const truncateFilename = s => Cypress._.truncate(s, {
