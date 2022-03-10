@@ -122,9 +122,9 @@ function onFailed () {
   }
   const testName = this.currentTest.fullTitle()
 
-  // remember test case retry times
+  // remember the test case retry times
   if (failedCaseTable[testName]) {
-    failedCaseTable[testName]++
+    failedCaseTable[testName] += 1
   } else {
     failedCaseTable[testName] = 1
   }
@@ -171,8 +171,10 @@ function onFailed () {
   // directly to write the failed log
   const lastAttempt = failedCaseTable[testName] - 1 === retriesTimes
   const noRetries = retriesTimes === 0
-  if (lastAttempt || noRetries) {
+  debug('no retries %o last attempt %o', noRetries, lastAttempt)
+  if (noRetries || lastAttempt) {
     const filepath = writeFailedTestInfo(info)
+    debug('saving the log file %s', filepath)
     info.filepath = filepath
   }
 
