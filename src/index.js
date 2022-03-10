@@ -21,12 +21,16 @@ const getFilepath = filename => path.join('cypress', 'logs', filename)
 const retriesTimes = getRetriesTimes()
 
 function getRetriesTimes () {
-  if (typeof Cypress.config('retries') === 'number') {
-    return Cypress.config('retries')
-  } else if (typeof Cypress.config('retries')['runMode'] === 'number') {
-    return Cypress.config('retries')['runMode'];
+  const retries = Cypress.config('retries')
+  if (Cypress._.isNumber(retries)) {
+    return retries
   }
-  return 0;
+
+  if (Cypress._.isObject(retries) && Cypress._.isNumber(retries.runMode)) {
+    return retries.runMode
+  }
+
+  return 0
 }
 
 const failedCaseTable = {}
@@ -101,7 +105,7 @@ function startLogging () {
       // getting an event some time after the command finishes.
       // Still better to have approximate value than nothing
       options.wallClockStoppedAt = Date.now()
-      options.duration = +options.wallClockStoppedAt - (+ new Date(options.wallClockStartedAt))
+      options.duration = +options.wallClockStoppedAt - (+new Date(options.wallClockStartedAt))
       options.consoleProps.Duration = options.duration
     }
   })
@@ -117,7 +121,7 @@ function onFailed () {
     return
   }
   const testName = this.currentTest.fullTitle()
-  
+
   // remember test case retry times
   if (failedCaseTable[testName]) {
     failedCaseTable[testName]++
@@ -162,13 +166,15 @@ function onFailed () {
     testError,
     testCommands
   }
-  
+
   // If finally retry still failed or we didn't set the retry value in cypress.json
   // directly to write the failed log
-  if (failedCaseTable[testName] - 1 === retriesTimes || retriesTimes === 0) {
+  const lastAttempt = failedCaseTable[testName] - 1 === retriesTimes
+  const noRetries = retriesTimes === 0
+  if (lastAttempt || noRetries) {
     const filepath = writeFailedTestInfo(info)
     info.filepath = filepath
-  } 
+  }
 
   cy.task('failed', info, { log: false })
 }
@@ -180,7 +186,6 @@ function onFailed () {
 // triage very difficult. In this case we just wrap client supplied
 // "afterEach" function with our callback "onFailed". This ensures we run
 // first.
-
 
 const _afterEach = afterEach
 /* eslint-disable-next-line no-global-assign */
