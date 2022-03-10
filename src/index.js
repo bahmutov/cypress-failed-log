@@ -18,6 +18,18 @@ const truncateFilename = s => Cypress._.truncate(s, {
 })
 const getCleanFilename = s => truncateFilename(cleanupFilename(s))
 const getFilepath = filename => path.join('cypress', 'logs', filename)
+const retriesTimes = getRetriesTimes()
+
+function getRetriesTimes () {
+  if (typeof Cypress.config('retries') === 'number') {
+    return Cypress.config('retries')
+  } else if (typeof Cypress.config('retries')['runMode'] === 'number') {
+    return Cypress.config('retries')['runMode'];
+  }
+  return 0;
+}
+
+const failedCaseTable = {}
 
 function writeFailedTestInfo ({
   specName,
@@ -104,14 +116,14 @@ function onFailed () {
   if (this.currentTest.state === 'passed') {
     return
   }
-
   const testName = this.currentTest.fullTitle()
-  // prevents processing failed test twice - from our "afterEach" callback
-  // and from wrapping user "afterEach"
-  if (hasSeen(testName)) {
-    return
+  
+  // remember test case retry times
+  if (failedCaseTable[testName]) {
+    failedCaseTable[testName]++
+  } else {
+    failedCaseTable[testName] = 1
   }
-  doneWithTest(testName)
 
   const title = this.currentTest.title
 
@@ -150,8 +162,13 @@ function onFailed () {
     testError,
     testCommands
   }
-  const filepath = writeFailedTestInfo(info)
-  info.filepath = filepath
+  
+  // If finally retry still failed or we didn't set the retry value in cypress.json
+  // directly to write the failed log
+  if (failedCaseTable[testName] - 1 === retriesTimes || retriesTimes === 0) {
+    const filepath = writeFailedTestInfo(info)
+    info.filepath = filepath
+  } 
 
   cy.task('failed', info, { log: false })
 }
@@ -164,14 +181,6 @@ function onFailed () {
 // "afterEach" function with our callback "onFailed". This ensures we run
 // first.
 
-// remember which tests we have processed already
-const seenTests = {}
-function hasSeen (testName) {
-  return seenTests[testName]
-}
-function doneWithTest (testName) {
-  seenTests[testName] = true
-}
 
 const _afterEach = afterEach
 /* eslint-disable-next-line no-global-assign */
