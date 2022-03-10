@@ -18,6 +18,22 @@ const truncateFilename = s => Cypress._.truncate(s, {
 })
 const getCleanFilename = s => truncateFilename(cleanupFilename(s))
 const getFilepath = filename => path.join('cypress', 'logs', filename)
+const retriesTimes = getRetriesTimes()
+
+function getRetriesTimes () {
+  const retries = Cypress.config('retries')
+  if (Cypress._.isNumber(retries)) {
+    return retries
+  }
+
+  if (Cypress._.isObject(retries) && Cypress._.isNumber(retries.runMode)) {
+    return retries.runMode
+  }
+
+  return 0
+}
+
+const failedCaseTable = {}
 
 function writeFailedTestInfo ({
   specName,
@@ -89,7 +105,7 @@ function startLogging () {
       // getting an event some time after the command finishes.
       // Still better to have approximate value than nothing
       options.wallClockStoppedAt = Date.now()
-      options.duration = +options.wallClockStoppedAt - (+ new Date(options.wallClockStartedAt))
+      options.duration = +options.wallClockStoppedAt - (+new Date(options.wallClockStartedAt))
       options.consoleProps.Duration = options.duration
     }
   })
@@ -104,14 +120,14 @@ function onFailed () {
   if (this.currentTest.state === 'passed') {
     return
   }
-
   const testName = this.currentTest.fullTitle()
-  // prevents processing failed test twice - from our "afterEach" callback
-  // and from wrapping user "afterEach"
-  if (hasSeen(testName)) {
-    return
+
+  // remember the test case retry times
+  if (failedCaseTable[testName]) {
+    failedCaseTable[testName] += 1
+  } else {
+    failedCaseTable[testName] = 1
   }
-  doneWithTest(testName)
 
   const title = this.currentTest.title
 
@@ -150,8 +166,17 @@ function onFailed () {
     testError,
     testCommands
   }
-  const filepath = writeFailedTestInfo(info)
-  info.filepath = filepath
+
+  // If finally retry still failed or we didn't set the retry value in cypress.json
+  // directly to write the failed log
+  const lastAttempt = failedCaseTable[testName] - 1 === retriesTimes
+  const noRetries = retriesTimes === 0
+  debug('no retries %o last attempt %o', noRetries, lastAttempt)
+  if (noRetries || lastAttempt) {
+    const filepath = writeFailedTestInfo(info)
+    debug('saving the log file %s', filepath)
+    info.filepath = filepath
+  }
 
   cy.task('failed', info, { log: false })
 }
@@ -163,15 +188,6 @@ function onFailed () {
 // triage very difficult. In this case we just wrap client supplied
 // "afterEach" function with our callback "onFailed". This ensures we run
 // first.
-
-// remember which tests we have processed already
-const seenTests = {}
-function hasSeen (testName) {
-  return seenTests[testName]
-}
-function doneWithTest (testName) {
-  seenTests[testName] = true
-}
 
 const _afterEach = afterEach
 /* eslint-disable-next-line no-global-assign */
