@@ -67,7 +67,7 @@ describe('cypress-failed-log', () => {
   })
 
   it('runs spec a', () => {
-    const spec = 'cypress/integration/a.js'
+    const spec = 'cypress/e2e/a.cy.js'
     terminalBanner(`Starting spec ${spec} at ${new Date()}`, '*')
 
     return cypress
@@ -98,8 +98,8 @@ describe('cypress-failed-log', () => {
       })
   })
 
-  it('runs spec test-page1-spec', () => {
-    const spec = 'cypress/integration/test-page1-spec.js'
+  it('runs spec test-page1', () => {
+    const spec = 'cypress/e2e/test-page1.cy.js'
     terminalBanner(`Starting spec ${spec} at ${new Date()}`, '*')
 
     return cypress
@@ -126,8 +126,8 @@ describe('cypress-failed-log', () => {
       })
   })
 
-  it('runs spec test-page2-spec', () => {
-    const spec = 'cypress/integration/test-page2-spec.js'
+  it('runs spec test-page2', () => {
+    const spec = 'cypress/e2e/test-page2.cy.js'
     terminalBanner(`Starting spec ${spec} at ${new Date()}`, '*')
 
     return cypress
@@ -159,8 +159,8 @@ describe('cypress-failed-log', () => {
       })
   })
 
-  it('runs spec long-name-spec', () => {
-    const spec = 'cypress/integration/long-name-spec.js'
+  it('runs spec long-name', () => {
+    const spec = 'cypress/e2e/long-name.cy.js'
     terminalBanner(`Starting spec ${spec} at ${new Date()}`, '*')
 
     return cypress

@@ -143,7 +143,8 @@ function onFailed () {
   // const testCommands = reject(commands.filter(notEmpty), duplicate)
   const testCommands = Cypress._.map(commands, 'message')
 
-  const specName = path.basename(window.location.pathname)
+  // const specName = path.basename(window.location.pathname)
+  const specName = Cypress.spec.relative
 
   console.log('=== test failed ===')
   console.log(specName)
