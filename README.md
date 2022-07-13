@@ -19,34 +19,32 @@ npm install --save-dev cypress cypress-failed-log
 yarn add -D cypress-failed-log
 ```
 
-Then include this module from your [cypress/support/index.js](cypress/support/index.js) file
+Then include this module from your [cypress/support/e2e.js](cypress/support/e2e.js) file
 
 ```js
-// cypress/support/index.js
+// in your cypress/support/e2e.js
 // or spec file
+// https://github.com/bahmutov/cypress-failed-log
 require('cypress-failed-log')
 // you can use the "import" keyword
 import "cypress-failed-log"
 ```
 
-and in [cypress/plugins/index.js](cypress/plugins/index.js) file add task `failed`
-
-### Recommended v10
+### Recommended for v10
 
 ```js
 // cypress.config.js
-```
+const { defineConfig } = require('cypress')
 
-### Recommended v9
-
-### Alternative: register the task yourself
-```js
-// cypress/plugins/index.js
-module.exports = (on, config) => {
-  on('task', {
-    failed: require('cypress-failed-log/src/failed')(),
-  })
-}
+module.exports = defineConfig({
+  defaultCommandTimeout: 500,
+  e2e: {
+    setupNodeEvents(on, config) {
+      // https://github.com/bahmutov/cypress-failed-log
+      require('cypress-failed-log/on')(on)
+    },
+  },
+})
 ```
 
 When Cypress runs, you will see commands including the failed one, right in the terminal
