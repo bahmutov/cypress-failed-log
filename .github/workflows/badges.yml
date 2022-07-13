@@ -24,7 +24,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Update version badges 🏷
-        run: npx -p dependency-version-badge update-badge cypress
+        run: npm run badges
 
       - name: Commit any changed files 💾
         uses: stefanzweifel/git-auto-commit-action@v4

@@ -32,6 +32,7 @@
   },
   "scripts": {
     "ban": "ban",
+    "badges": "npx -p dependency-version-badge update-badge cypress",
     "deps": "deps-ok && dependency-check . --unused --no-dev --ignore-module logdown",
     "issues": "git-issues",
     "license": "license-checker --production --onlyunknown --csv",
