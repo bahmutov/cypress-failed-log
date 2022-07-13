@@ -1,4 +1,4 @@
-# cypress-failed-log
+# cypress-failed-log ![cypress version](https://img.shields.io/badge/cypress-9.0.0-brightgreen)
 
 > Shows the commands from [Cypress.io](https://www.cypress.io) failed test in the terminal.
 

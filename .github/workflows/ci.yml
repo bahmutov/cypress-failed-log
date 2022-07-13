@@ -5,10 +5,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout 🛎
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Install and test 📦
-        uses: cypress-io/github-action@v2
+        uses: cypress-io/github-action@v4
         with:
           command: npm test
 
