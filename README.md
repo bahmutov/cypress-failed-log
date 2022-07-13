@@ -15,17 +15,31 @@ Add this module as a dev dependency to your project
 
 ```sh
 npm install --save-dev cypress cypress-failed-log
+# if using Yarn
+yarn add -D cypress-failed-log
 ```
 
 Then include this module from your [cypress/support/index.js](cypress/support/index.js) file
 
 ```js
 // cypress/support/index.js
+// or spec file
 require('cypress-failed-log')
+// you can use the "import" keyword
+import "cypress-failed-log"
 ```
 
 and in [cypress/plugins/index.js](cypress/plugins/index.js) file add task `failed`
 
+### Recommended v10
+
+```js
+// cypress.config.js
+```
+
+### Recommended v9
+
+### Alternative: register the task yourself
 ```js
 // cypress/plugins/index.js
 module.exports = (on, config) => {
