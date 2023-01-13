@@ -98,7 +98,7 @@ describe('cypress-failed-log', () => {
       })
   })
 
-  it.only('runs spec b', () => {
+  it('runs spec b', () => {
     const spec = 'cypress/e2e/b.cy.js'
     terminalBanner(`Starting spec ${spec} at ${new Date()}`, '*')
 
