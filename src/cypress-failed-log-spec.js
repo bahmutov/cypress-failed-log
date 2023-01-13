@@ -98,6 +98,48 @@ describe('cypress-failed-log', () => {
       })
   })
 
+  it.only('runs spec b', () => {
+    const spec = 'cypress/e2e/b.cy.js'
+    terminalBanner(`Starting spec ${spec} at ${new Date()}`, '*')
+
+    return cypress
+      .run({
+        spec,
+        config: {
+          retries: 1 // This setting will be overriden by individual tests
+        }
+      })
+      .tap(() => {
+        terminalBanner(
+          `Cypress run finished for: ${spec} at ${new Date()}`,
+          '*'
+        )
+      })
+      .then(checkStats)
+      .then(({ runs }) => {
+        const { spec: { name }, tests } = runs[0]
+
+        const savedData = {}
+        for (const testInfo of tests) {
+          debug('test info %o', testInfo)
+          const { title, state } = testInfo
+
+          if (state === 'failed') {
+            const filename = getFilename(name, title)
+            la(existsSync(filename), 'cannot find file', filename)
+
+            const saved = require(filename)
+            snapshot(`saved commands from ${name} ${_.last(title)}`, saved.testCommands)
+            savedData[saved.title] = saved
+          }
+        }
+
+        // Individual assertions
+        const { testError } = savedData['overrides the "retries" setting']
+        la(testError.includes("expected 'FOO' to equal 'bar'"), 'Inaccurate error message')
+      })
+  })
+
   it('runs spec test-page1', () => {
     const spec = 'cypress/e2e/test-page1.cy.js'
     terminalBanner(`Starting spec ${spec} at ${new Date()}`, '*')

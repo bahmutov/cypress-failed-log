@@ -74,3 +74,16 @@ exports['saved commands from cypress/e2e/a.cy.js has third test (failing)'] = [
   "wrap foo",
   "assert expected **foo** to equal **bar**"
 ]
+
+exports['spec cypress/e2e/b.cy.js finished with'] = {
+  "totalTests": 1,
+  "totalFailed": 1,
+  "totalPassed": 0,
+  "totalPending": 0,
+  "totalSkipped": 0
+}
+
+exports['saved commands from cypress/e2e/b.cy.js overrides the "retries" setting'] = [
+  "wrap FOO",
+  "assert expected **FOO** to equal **bar**"
+]

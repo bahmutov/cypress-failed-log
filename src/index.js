@@ -18,7 +18,6 @@ const truncateFilename = s => Cypress._.truncate(s, {
 })
 const getCleanFilename = s => truncateFilename(cleanupFilename(s))
 const getFilepath = filename => path.join('cypress', 'logs', filename)
-const retriesTimes = getRetriesTimes()
 
 function getRetriesTimes () {
   const retries = Cypress.config('retries')
@@ -170,6 +169,7 @@ function onFailed () {
 
   // If finally retry still failed or we didn't set the retry value in cypress.json
   // directly to write the failed log
+  const retriesTimes = getRetriesTimes()
   const lastAttempt = failedCaseTable[testName] - 1 === retriesTimes
   const noRetries = retriesTimes === 0
   debug('no retries %o last attempt %o', noRetries, lastAttempt)
