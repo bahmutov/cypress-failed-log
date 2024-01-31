@@ -117,7 +117,7 @@ function initLog () {
 
 function onFailed () {
   savingCommands = false
-  if (this.currentTest.state === 'passed') {
+  if (this.currentTest.state === 'passed' || this.currentTest.state === 'pending') {
     return
   }
   const testName = this.currentTest.fullTitle()
